@@ -4,7 +4,7 @@ import com.ashish.projects.VrboApp.entity.HotelContactInfo;
 import jakarta.persistence.Column;
 import lombok.Data;
 import lombok.Getter;
-//import lombok.Setter;kjbhsdfhbhsbs
+//import lombok.Setter;
 
 @Data
 public class HotelDto {
@@ -58,6 +58,7 @@ public class HotelDto {
 
     public void setAmenities(String[] amenities) {
         this.amenities = amenities;
+
     }
 
     public HotelContactInfo getContactInfo() {
