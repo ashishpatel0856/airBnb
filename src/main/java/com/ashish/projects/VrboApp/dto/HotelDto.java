@@ -5,7 +5,7 @@ import jakarta.persistence.Column;
 import lombok.Data;
 import lombok.Getter;
 //import lombok.Setter;
-
+//jgjfjlkfjl
 @Data
 public class HotelDto {
     private Long id;
