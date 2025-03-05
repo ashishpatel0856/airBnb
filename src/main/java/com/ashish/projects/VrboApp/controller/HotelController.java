@@ -35,6 +35,10 @@ public class HotelController {
     }
 
 
+    @GetMapping
+    public ResponseEntity<List<HotelDto>> getAllHotels() {
+        return ResponseEntity.ok(hotelService.getAllHotels());
+    }
 
 
     @GetMapping("/{hotelId}")
@@ -61,3 +65,4 @@ public class HotelController {
         return ResponseEntity.noContent().build();
     }
 }
+

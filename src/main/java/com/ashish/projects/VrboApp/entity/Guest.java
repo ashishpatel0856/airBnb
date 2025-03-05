@@ -1,5 +1,7 @@
 package com.ashish.projects.VrboApp.entity;
 
+
+import com.ashish.projects.VrboApp.entity.enums.Gender;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -21,8 +23,8 @@ public class Guest {
     @Column(nullable = false)
     private String name;
 //
-//    @Enumerated(EnumType.STRING)
-//    private Gender gender;
+    @Enumerated(EnumType.STRING)
+    private Gender gender;
 
     private Integer age;
 
