@@ -1,15 +1,19 @@
 package com.ashish.projects.VrboApp.dto;
 
 import com.ashish.projects.VrboApp.entity.HotelContactInfo;
-import jakarta.persistence.Column;
+
 import lombok.Data;
-import lombok.Getter;
-//import lombok.Setter;
-//jgjfjlkfjl
+
 @Data
 public class HotelDto {
     private Long id;
     private String name;
+    private String city;
+    private String[] photos;
+    private String[] amenities;
+    private HotelContactInfo contactInfo;
+    private Boolean active;
+
 
     public Long getId() {
         return id;
@@ -69,9 +73,5 @@ public class HotelDto {
         this.contactInfo = contactInfo;
     }
 
-    private String city;
-    private String[] photos;
-    private String[] amenities;
-    private HotelContactInfo contactInfo;
-    private Boolean active;
+
 }

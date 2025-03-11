@@ -1,10 +1,11 @@
 package com.ashish.projects.VrboApp.repository;
 
 import com.ashish.projects.VrboApp.entity.Hotel;
+import com.ashish.projects.VrboApp.entity.HotelMinPrice;
 import com.ashish.projects.VrboApp.entity.Inventory;
 import com.ashish.projects.VrboApp.entity.Room;
 import jakarta.persistence.LockModeType;
-import org.apache.catalina.Group;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -13,7 +14,6 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import java.nio.file.attribute.GroupPrincipal;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -32,7 +32,7 @@ public interface InventoryRepository extends JpaRepository<Inventory, Long> {
             HAVING COUNT(i.date) = :dateCount
            """)
 
-    Page<Hotel> findHotelIsWithAvailableInventory(
+    Page<Hotel> findHotelsWithAvailableInventory(
             @Param("city") String city,
             @Param("starDate") LocalDate starDate,
             @Param("endDate") LocalDate endDate,
@@ -57,4 +57,5 @@ public interface InventoryRepository extends JpaRepository<Inventory, Long> {
         @Param("roomsCount") Integer roomsCount
         );
 
+    List<Inventory> findByHotelAndDateBetween(Hotel hotel, LocalDate startDate, LocalDate endDate);
 }

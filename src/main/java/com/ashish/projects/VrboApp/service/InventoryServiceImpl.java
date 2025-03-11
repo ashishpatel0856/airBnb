@@ -1,10 +1,10 @@
 package com.ashish.projects.VrboApp.service;
-
-import com.ashish.projects.VrboApp.dto.HotelDto;
+import com.ashish.projects.VrboApp.dto.HotelPriceDto;
 import com.ashish.projects.VrboApp.dto.HotelSearchRequest;
-import com.ashish.projects.VrboApp.entity.Hotel;
+
 import com.ashish.projects.VrboApp.entity.Inventory;
 import com.ashish.projects.VrboApp.entity.Room;
+import com.ashish.projects.VrboApp.repository.HotelMinPriceRepository;
 import com.ashish.projects.VrboApp.repository.InventoryRepository;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
@@ -24,11 +24,15 @@ public class InventoryServiceImpl implements InventoryService {
     private final InventoryRepository inventoryRepository;
     private static final Logger log = LoggerFactory.getLogger(HotelServiceImpl.class);
     private final ModelMapper modelMapper;
+    private HotelMinPriceRepository hotelMinPriceRepository;
 
-    public InventoryServiceImpl(InventoryRepository inventoryRepository, ModelMapper modelMapper) {
+    public InventoryServiceImpl(InventoryRepository inventoryRepository, ModelMapper modelMapper, HotelMinPriceRepository hotelMinPriceRepository) {
         this.inventoryRepository = inventoryRepository;
         this.modelMapper = modelMapper;
+        this.hotelMinPriceRepository = hotelMinPriceRepository;
     }
+
+
 
     @Override
     public void initializeRoomForAYear(Room room) {
@@ -57,18 +61,18 @@ public class InventoryServiceImpl implements InventoryService {
     }
 
     @Override
-    public Page<HotelDto> searchHotels(HotelSearchRequest hotelSearchRequest) {
+    public Page<HotelPriceDto> searchHotels(HotelSearchRequest hotelSearchRequest) {
         Pageable pageable = PageRequest.of(hotelSearchRequest.getPage(), hotelSearchRequest.getSize());
         long dateCount = ChronoUnit.DAYS.between( hotelSearchRequest.getStartDate(), hotelSearchRequest.getEndDate())+1;
-
-        Page<Hotel> hotelPage = inventoryRepository.findHotelIsWithAvailableInventory(hotelSearchRequest.getCity(),
+//business login-90days
+        Page<HotelPriceDto> hotelPage =
+                hotelMinPriceRepository.findHotelsWithAvailableInventory(hotelSearchRequest.getCity(),
                 hotelSearchRequest.getStartDate(),
                 hotelSearchRequest.getEndDate(),
                 hotelSearchRequest.getRoomsCount(),
                 dateCount,pageable);
 
-        return hotelPage.map((element) -> modelMapper.map(element, HotelDto.class));
-
+        return hotelPage;
     }
 
 }

@@ -1,5 +1,6 @@
 package com.ashish.projects.VrboApp.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -21,6 +22,7 @@ public class Room {
 
     @ManyToOne
     @JoinColumn(name="hotel_id", nullable=false)
+    @JsonIgnore
     private Hotel hotel;
 
     public Hotel getHotel() {

@@ -1,8 +1,6 @@
 package com.ashish.projects.VrboApp.controller;
-
-
-import com.ashish.projects.VrboApp.dto.HotelDto;
 import com.ashish.projects.VrboApp.dto.HotelInfoDto;
+import com.ashish.projects.VrboApp.dto.HotelPriceDto;
 import com.ashish.projects.VrboApp.dto.HotelSearchRequest;
 import com.ashish.projects.VrboApp.service.HotelService;
 import com.ashish.projects.VrboApp.service.HotelServiceImpl;
@@ -11,7 +9,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 
 @RestController
 @RequestMapping("/hotels")
@@ -27,8 +24,8 @@ private final InventoryService inventoryService;
 
 
     @GetMapping("/search")
-    public ResponseEntity<Page<HotelDto>> searchHotels(@RequestBody HotelSearchRequest hotelSearchRequest) {
-           Page<HotelDto> page = inventoryService.searchHotels(hotelSearchRequest);
+    public ResponseEntity<Page<HotelPriceDto>> searchHotels(@RequestBody HotelSearchRequest hotelSearchRequest) {
+          var page = inventoryService.searchHotels(hotelSearchRequest);
            return ResponseEntity.ok(page);
     }
 
