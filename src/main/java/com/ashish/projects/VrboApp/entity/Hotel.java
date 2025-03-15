@@ -2,17 +2,17 @@ package com.ashish.projects.VrboApp.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import lombok.Data;
+
 
 import lombok.Getter;
 import lombok.Setter;
-import org.antlr.v4.runtime.misc.NotNull;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 
 import java.time.LocalDateTime;
 import java.util.List;
+
 
 @Entity
 @Getter
@@ -43,13 +43,14 @@ public class Hotel {
     @Embedded
     private HotelContactInfo contactInfo;
 
-    @NotNull
+    @Column(nullable = false)
     private Boolean active;
 
-    @ManyToOne
+    @ManyToOne(optional = false,fetch = FetchType.LAZY)
     private User Owner;
 
     @OneToMany(mappedBy = "hotel")
+    @JsonIgnore
     private List<Room> rooms;
 
 }

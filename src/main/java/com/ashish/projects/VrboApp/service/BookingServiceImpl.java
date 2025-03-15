@@ -6,12 +6,15 @@ import com.ashish.projects.VrboApp.dto.GuestDto;
 import com.ashish.projects.VrboApp.entity.*;
 import com.ashish.projects.VrboApp.entity.enums.BookingStatus;
 import com.ashish.projects.VrboApp.exceptions.ResourceNotFoundException;
+import com.ashish.projects.VrboApp.exceptions.UnAuthorisedException;
 import com.ashish.projects.VrboApp.repository.*;
+import jakarta.servlet.ServletContext;
 import jakarta.transaction.Transactional;
 
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -27,18 +30,22 @@ public class BookingServiceImpl implements BookingService {
     private final HotelRepository hotelRepository;
     private final ModelMapper modelMapper;
     private final GuestRepository guestRepository;
+    private final ServletContext servletContext;
     private BookingRepository bookingRepository;
     private final RoomRepository roomRepository;
     private final InventoryRepository inventoryRepository;
+    private final CheckoutService checkoutService;
 
 
-    public BookingServiceImpl(BookingRepository bookingRepository, HotelRepository hotelRepository, RoomRepository roomRepository, InventoryRepository inventoryRepository, ModelMapper modelMapper, GuestRepository guestRepository) {
+    public BookingServiceImpl(BookingRepository bookingRepository, HotelRepository hotelRepository, RoomRepository roomRepository, InventoryRepository inventoryRepository, ModelMapper modelMapper, GuestRepository guestRepository, ServletContext servletContext, CheckoutService checkoutService) {
         this.bookingRepository = bookingRepository;
         this.hotelRepository = hotelRepository;
         this.roomRepository = roomRepository;
         this.inventoryRepository = inventoryRepository;
         this.modelMapper = modelMapper;
         this.guestRepository = guestRepository;
+        this.servletContext = servletContext;
+        this.checkoutService = checkoutService;
     }
 
     @Override
@@ -85,7 +92,7 @@ public class BookingServiceImpl implements BookingService {
                 .room(room)
                 .checkInDate(bookingRequest.getCheckInDate())
                 .checkOutDate(bookingRequest.getCheckOutDate())
-                .user(getCurrentUset())
+                .user(getCurrentUser())
                 .roomsCount(bookingRequest.getRoomsCount())
                 .amount(BigDecimal.TEN)
                 .build();
@@ -101,6 +108,11 @@ public class BookingServiceImpl implements BookingService {
         Booking booking = bookingRepository.findById(bookingId).orElseThrow(() ->
                 new ResourceNotFoundException("Booking not found with id:" + bookingId));
 
+        User user = getCurrentUser();
+        if(!user.equals(booking.getUser())) {
+
+            throw new UnAuthorisedException("Booking does not belong to this user with id"+user.getId());
+        }
         if(hasBookingExpired(booking)) {
             throw new IllegalStateException("BOOKING HAS ALREADY EXPIRED");
         }
@@ -111,7 +123,7 @@ public class BookingServiceImpl implements BookingService {
 
         for(GuestDto guestDto : guestDtoList) {
             Guest guest = modelMapper.map(guestDto, Guest.class);
-            guest.setUser(getCurrentUset());
+            guest.setUser(user);
             guest=guestRepository.save(guest);
             booking.getGuests().add(guest);
 
@@ -120,14 +132,35 @@ public class BookingServiceImpl implements BookingService {
         booking = bookingRepository.save(booking);
         return modelMapper.map(booking, BookingDto.class);
     }
+
+
+    @Override
+    public String initiatePayments(Long bookingId) {
+        Booking booking = bookingRepository.findById(bookingId).orElseThrow(
+                () -> new ResourceNotFoundException("Booking not found with id:" + bookingId)
+        );
+        User user = getCurrentUser();
+        if(!user.equals(booking.getUser())) {
+
+            throw new UnAuthorisedException("Booking does not belong to this user with id"+user.getId());
+        }
+        if(hasBookingExpired(booking)) {
+            throw new IllegalStateException("BOOKING HAS ALREADY EXPIRED");
+        }
+
+
+
+        return "";
+
+    }
+
     public boolean hasBookingExpired(Booking booking) {
         return booking.getCreatedAt().plusMinutes(10).isBefore(LocalDateTime.now());
     }
 
 
-    public User getCurrentUset() {
-        User user = new User();
-        user.setId(1L);
-        return user;
+    public User getCurrentUser() {
+
+        return (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
     }
 }
