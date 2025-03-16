@@ -14,6 +14,7 @@ import jakarta.transaction.Transactional;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
@@ -48,6 +49,8 @@ public class BookingServiceImpl implements BookingService {
         this.checkoutService = checkoutService;
     }
 
+    @Value("${frontend.url}")
+    private String frontendUrl;
     @Override
     @Transactional
     public BookingDto initialiseBooking(BookingRequest bookingRequest) {
@@ -148,9 +151,10 @@ public class BookingServiceImpl implements BookingService {
             throw new IllegalStateException("BOOKING HAS ALREADY EXPIRED");
         }
 
-
-
-        return "";
+        String sessionUrl = checkoutService.getCheckoutSession(booking,frontendUrl+"/payments/success",frontendUrl+"/payments/failure");
+        booking.setBookingStatus((BookingStatus.PAYMENT_PENDING));
+        bookingRepository.save(booking);
+        return sessionUrl;
 
     }
 
