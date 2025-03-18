@@ -49,4 +49,5 @@ public class JWTService {
                 .getPayload();
         return Long.valueOf(claims.getSubject());
     }
+
 }

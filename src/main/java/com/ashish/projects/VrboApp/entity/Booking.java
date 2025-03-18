@@ -1,16 +1,13 @@
 package com.ashish.projects.VrboApp.entity;
-
 import com.ashish.projects.VrboApp.entity.enums.BookingStatus;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -20,20 +17,21 @@ import java.util.Set;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Booking {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private  Long id;
+    private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name ="hotel_id",nullable = false)
+    @JoinColumn(name = "hotel_id", nullable = false)
     private Hotel hotel;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="room_id",nullable = false)
+    @JoinColumn(name= "room_id", nullable = false)
     private Room room;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id",nullable = false)
+    @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
     @Column(nullable = false)
@@ -41,6 +39,7 @@ public class Booking {
 
     @Column(nullable = false)
     private LocalDate checkInDate;
+
     @Column(nullable = false)
     private LocalDate checkOutDate;
 
@@ -50,11 +49,9 @@ public class Booking {
     @UpdateTimestamp
     private LocalDateTime updatedAt;
 
-
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private BookingStatus bookingStatus;
-
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
@@ -62,13 +59,12 @@ public class Booking {
             joinColumns = @JoinColumn(name = "booking_id"),
             inverseJoinColumns = @JoinColumn(name = "guest_id")
     )
-    private List<Guest> guests;
+    private Set<Guest> guests;
 
-    @Column(nullable = false,precision=10,scale = 2)
+    @Column(nullable = false, precision = 10, scale = 2)
     private BigDecimal amount;
 
     @Column(unique = true)
     private String paymentSessionId;
-
 
 }

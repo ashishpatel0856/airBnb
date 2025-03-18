@@ -2,6 +2,7 @@ package com.ashish.projects.VrboApp.controller;
 
 import com.ashish.projects.VrboApp.dto.BookingDto;
 import com.ashish.projects.VrboApp.dto.HotelDto;
+import com.ashish.projects.VrboApp.dto.HotelReportDto;
 import com.ashish.projects.VrboApp.service.BookingService;
 import com.ashish.projects.VrboApp.service.HotelService;
 import io.swagger.v3.oas.annotations.Operation;

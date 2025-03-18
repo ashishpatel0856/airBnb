@@ -2,8 +2,10 @@ package com.ashish.projects.VrboApp.controller;
 
 import com.ashish.projects.VrboApp.dto.BookingDto;
 import com.ashish.projects.VrboApp.dto.GuestDto;
+import com.ashish.projects.VrboApp.dto.ProfileUpdateRequestDto;
 import com.ashish.projects.VrboApp.dto.UserDto;
 import com.ashish.projects.VrboApp.service.BookingService;
+import com.ashish.projects.VrboApp.service.GuestService;
 import com.ashish.projects.VrboApp.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;

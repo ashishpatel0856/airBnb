@@ -46,8 +46,9 @@ public class Hotel {
     @Column(nullable = false)
     private Boolean active;
 
-    @ManyToOne(optional = false,fetch = FetchType.LAZY)
-    private User Owner;
+    @ManyToOne
+    @JoinColumn(name = "owner_id")  // Ensure this matches the column name in the database
+    private User owner;
 
     @OneToMany(mappedBy = "hotel")
     @JsonIgnore

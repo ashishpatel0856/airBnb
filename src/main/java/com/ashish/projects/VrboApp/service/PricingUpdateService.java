@@ -2,19 +2,20 @@ package com.ashish.projects.VrboApp.service;
 
 
 import com.ashish.projects.VrboApp.entity.Hotel;
-import com.ashish.projects.VrboApp.entity.HotelMinPrice;
 import com.ashish.projects.VrboApp.entity.Inventory;
+import com.ashish.projects.VrboApp.entity.HotelMinPrice;
+
 import com.ashish.projects.VrboApp.repository.HotelMinPriceRepository;
 import com.ashish.projects.VrboApp.repository.HotelRepository;
 import com.ashish.projects.VrboApp.repository.InventoryRepository;
 import com.ashish.projects.VrboApp.strategy.PricingService;
-import jakarta.transaction.Transactional;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -25,23 +26,19 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
+@Slf4j
 @Transactional
 public class PricingUpdateService {
-    // scheduler to update the inventory and hotelMinprice tables every hours
-    private static final Logger log = LoggerFactory.getLogger(PricingUpdateService.class);
+
+    // Scheduler to update the inventory and HotelMinPrice tables every hour
 
     private final HotelRepository hotelRepository;
     private final InventoryRepository inventoryRepository;
     private final HotelMinPriceRepository hotelMinPriceRepository;
     private final PricingService pricingService;
 
-    public PricingUpdateService(HotelRepository hotelRepository, InventoryRepository inventoryRepository, HotelMinPriceRepository hotelMinPriceRepository, PricingService pricingService) {
-        this.hotelRepository = hotelRepository;
-        this.inventoryRepository = inventoryRepository;
-        this.hotelMinPriceRepository = hotelMinPriceRepository;
-        this.pricingService = pricingService;
-    }
-//   @Scheduled(cron = "*/5 * * * * *")
+    //    @Scheduled(cron = "*/5 * * * * *")
     @Scheduled(cron = "0 0 * * * *")
     public void updatePrices() {
         int page = 0;
@@ -100,4 +97,5 @@ public class PricingUpdateService {
         });
         inventoryRepository.saveAll(inventoryList);
     }
+
 }

@@ -1,4 +1,7 @@
 package com.ashish.projects.VrboApp.security;
+
+
+
 import com.ashish.projects.VrboApp.dto.LoginDto;
 import com.ashish.projects.VrboApp.dto.SignUpRequestDto;
 import com.ashish.projects.VrboApp.dto.UserDto;
@@ -6,6 +9,7 @@ import com.ashish.projects.VrboApp.entity.User;
 import com.ashish.projects.VrboApp.entity.enums.Role;
 import com.ashish.projects.VrboApp.exceptions.ResourceNotFoundException;
 import com.ashish.projects.VrboApp.repository.UserRepository;
+import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -16,24 +20,14 @@ import org.springframework.stereotype.Service;
 import java.util.Set;
 
 @Service
+@RequiredArgsConstructor
 public class AuthService {
-
-
 
     private final UserRepository userRepository;
     private final ModelMapper modelMapper;
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
     private final JWTService jwtService;
-
-    public AuthService( UserRepository userRepository, ModelMapper modelMapper, PasswordEncoder passwordEncoder, AuthenticationManager authenticationManager, JWTService jwtService) {
-
-        this.userRepository = userRepository;
-        this.modelMapper = modelMapper;
-        this.passwordEncoder = passwordEncoder;
-        this.authenticationManager = authenticationManager;
-        this.jwtService = jwtService;
-    }
 
     public UserDto signUp(SignUpRequestDto signUpRequestDto) {
 
@@ -47,6 +41,7 @@ public class AuthService {
         newUser.setRoles(Set.of(Role.GUEST));
         newUser.setPassword(passwordEncoder.encode(signUpRequestDto.getPassword()));
         newUser = userRepository.save(newUser);
+
         return modelMapper.map(newUser, UserDto.class);
     }
 

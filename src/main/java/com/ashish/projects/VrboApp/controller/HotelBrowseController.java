@@ -1,5 +1,5 @@
 package com.ashish.projects.VrboApp.controller;
-import com.ashish.projects.VrboApp.dto.HotelInfoDto;
+import com.ashish.projects.VrboApp.dto.*;
 import com.ashish.projects.VrboApp.service.HotelService;
 import com.ashish.projects.VrboApp.service.InventoryService;
 import io.swagger.v3.oas.annotations.Operation;

@@ -1,6 +1,7 @@
 package com.ashish.projects.VrboApp.entity;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -15,6 +16,7 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @NoArgsConstructor
+@AllArgsConstructor
 public class HotelMinPrice {
 
     @Id
@@ -41,4 +43,5 @@ public class HotelMinPrice {
         this.hotel = hotel;
         this.date = date;
     }
+
 }
