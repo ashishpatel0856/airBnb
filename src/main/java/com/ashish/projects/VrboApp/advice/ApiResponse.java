@@ -24,4 +24,5 @@ public class ApiResponse<T> {
         this();
         this.error = error;
     }
+
 }

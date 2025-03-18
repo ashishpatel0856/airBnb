@@ -1,6 +1,5 @@
 package com.ashish.projects.VrboApp.advice;
 
-import com.ashish.projects.VrboApp.advice.ApiResponse;
 import org.springframework.core.MethodParameter;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.HttpMessageConverter;

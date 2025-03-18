@@ -17,7 +17,7 @@ import java.math.BigDecimal;
 @Service
 public class CheckoutServiceImpl implements CheckoutService {
 
-    private static final Logger log = LoggerFactory.getLogger(HotelServiceImpl.class);
+    private static final Logger log = LoggerFactory.getLogger(CheckoutServiceImpl.class);
     private final BookingRepository bookingRepository;
     public CheckoutServiceImpl(BookingRepository bookingRepository) {
         this.bookingRepository = bookingRepository;

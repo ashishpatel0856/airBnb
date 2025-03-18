@@ -17,6 +17,7 @@ public class HotelBrowseController {
 private final InventoryService inventoryService;
  private final HotelService hotelService;
 
+
     public HotelBrowseController(InventoryService inventoryService, HotelService hotelService, HotelServiceImpl hotelServiceImpl) {
         this.inventoryService = inventoryService;
         this.hotelService = hotelService;

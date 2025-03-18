@@ -19,11 +19,9 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-//@Slf4j
-//@RequiredArgsConstructor
 public class RoomServiceImpl implements RoomService {
 
-    private static final Logger log = LoggerFactory.getLogger(HotelController.class);
+    private static final Logger log = LoggerFactory.getLogger(RoomServiceImpl.class);
 
     private final RoomRepository roomRepository;
     private final ModelMapper modelMapper;

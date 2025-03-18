@@ -28,12 +28,15 @@ import static java.util.Arrays.stream;
 
 @Service
 public class HotelServiceImpl implements HotelService {
+
+    private static final Logger log = LoggerFactory.getLogger(HotelServiceImpl.class);
+
+
     private final HotelRepository hotelRepository;
    private final ModelMapper modelMapper;
    private final InventoryService inventoryService;
    private final RoomRepository roomRepository;
 
-    private static final Logger log = LoggerFactory.getLogger(HotelServiceImpl.class);
 
 
 

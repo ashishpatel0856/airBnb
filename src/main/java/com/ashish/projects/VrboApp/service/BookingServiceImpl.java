@@ -27,7 +27,8 @@ import java.util.List;
 @Transactional
 public class BookingServiceImpl implements BookingService {
 
-    private static final Logger log = LoggerFactory.getLogger(HotelServiceImpl.class);
+    private static final Logger log = LoggerFactory.getLogger(BookingServiceImpl.class);
+
     private final HotelRepository hotelRepository;
     private final ModelMapper modelMapper;
     private final GuestRepository guestRepository;
@@ -49,8 +50,9 @@ public class BookingServiceImpl implements BookingService {
         this.checkoutService = checkoutService;
     }
 
-    @Value("${frontend.url}")
+    @Value("http://localhost:8080")
     private String frontendUrl;
+
     @Override
     @Transactional
     public BookingDto initialiseBooking(BookingRequest bookingRequest) {
@@ -105,6 +107,7 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
+    @Transactional
     public BookingDto addGuests(long bookingId, List<GuestDto> guestDtoList) {
         log.info("Adding guests for booking with id :{}", bookingId);
 
@@ -138,6 +141,7 @@ public class BookingServiceImpl implements BookingService {
 
 
     @Override
+    @Transactional
     public String initiatePayments(Long bookingId) {
         Booking booking = bookingRepository.findById(bookingId).orElseThrow(
                 () -> new ResourceNotFoundException("Booking not found with id:" + bookingId)

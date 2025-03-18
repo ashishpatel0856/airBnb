@@ -21,8 +21,11 @@ import java.time.temporal.ChronoUnit;
 @Service
 public class InventoryServiceImpl implements InventoryService {
 
+    static {
+        LoggerFactory.getLogger(InventoryServiceImpl.class);
+    }
+
     private final InventoryRepository inventoryRepository;
-    private static final Logger log = LoggerFactory.getLogger(HotelServiceImpl.class);
     private final ModelMapper modelMapper;
     private HotelMinPriceRepository hotelMinPriceRepository;
 

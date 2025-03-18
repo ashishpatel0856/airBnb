@@ -28,7 +28,7 @@ import java.util.stream.Collectors;
 @Transactional
 public class PricingUpdateService {
     // scheduler to update the inventory and hotelMinprice tables every hours
-    private static final Logger log = LoggerFactory.getLogger(HotelServiceImpl.class);
+    private static final Logger log = LoggerFactory.getLogger(PricingUpdateService.class);
 
     private final HotelRepository hotelRepository;
     private final InventoryRepository inventoryRepository;

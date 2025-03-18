@@ -5,6 +5,7 @@ import com.ashish.projects.VrboApp.entity.Inventory;
 import lombok.RequiredArgsConstructor;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 
 @RequiredArgsConstructor
 public class HolidayPricingStrategy implements PricingStrategy{
@@ -14,8 +15,9 @@ public class HolidayPricingStrategy implements PricingStrategy{
     @Override
     public BigDecimal calculatePrice(Inventory inventory) {
         BigDecimal price = wrapped.calculatePrice(inventory);
-        boolean isTodayHoliday = true; // call an API or check with local data
+        boolean isTodayHoliday = true;
         if (isTodayHoliday) {
+
             price = price.multiply(BigDecimal.valueOf(1.25));
         }
         return price;

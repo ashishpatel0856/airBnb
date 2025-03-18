@@ -1,7 +1,6 @@
 package com.ashish.projects.VrboApp.strategy;
 import com.ashish.projects.VrboApp.entity.Inventory;
 import org.springframework.stereotype.Service;
-import com.ashish.projects.VrboApp.strategy.BasePriceStrategy;
 
 import java.math.BigDecimal;
 import java.util.List;
