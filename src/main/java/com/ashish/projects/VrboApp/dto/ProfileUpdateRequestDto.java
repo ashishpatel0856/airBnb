@@ -2,13 +2,12 @@ package com.ashish.projects.VrboApp.dto;
 
 import com.ashish.projects.VrboApp.entity.enums.Gender;
 import lombok.Data;
-import org.apache.catalina.User;
+
+import java.time.LocalDate;
 
 @Data
-public class GuestDto {
-    private Long id;
-    private User user;
+public class ProfileUpdateRequestDto {
     private String name;
+    private LocalDate dateOfBirth;
     private Gender gender;
-    private Integer age;
 }

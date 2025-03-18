@@ -1,15 +1,19 @@
 package com.ashish.projects.VrboApp.dto;
-import com.ashish.projects.VrboApp.entity.HotelContactInfo;
 
+import com.ashish.projects.VrboApp.entity.HotelContactInfo;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
-public class HotelDto {
+@AllArgsConstructor
+@NoArgsConstructor
+public class HotelPriceResponseDto {
     private Long id;
     private String name;
     private String city;
     private String[] photos;
     private String[] amenities;
     private HotelContactInfo contactInfo;
-    private Boolean active;
+    private Double price;
 }
