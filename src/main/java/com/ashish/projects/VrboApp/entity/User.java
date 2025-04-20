@@ -65,4 +65,7 @@ public class User implements UserDetails {
     public int hashCode() {
         return Objects.hashCode(getId());
     }
+
+
 }
+

@@ -63,8 +63,10 @@ public class HotelController {
     @GetMapping
     @Operation(summary = "Get all hotels owned by admin", tags = {"Admin Hotel"})
     public ResponseEntity<List<HotelDto>> getAllHotels() {
+
         return ResponseEntity.ok(hotelService.getAllHotels());
     }
+
 
     @GetMapping("/{hotelId}/bookings")
     @Operation(summary = "Get all bookings of a hotel", tags = {"Admin Bookings"})

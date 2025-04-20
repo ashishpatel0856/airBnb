@@ -148,6 +148,9 @@ public class HotelServiceImpl implements HotelService{
         return new HotelInfoDto(modelMapper.map(hotel, HotelDto.class), rooms);
     }
 
+
+
+
     @Override
     public List<HotelDto> getAllHotels() {
         User user = getCurrentUser();

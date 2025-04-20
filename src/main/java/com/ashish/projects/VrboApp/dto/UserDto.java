@@ -12,4 +12,5 @@ public class UserDto {
     private String name;
     private Gender gender;
     private LocalDate dateOfBirth;
+
 }
