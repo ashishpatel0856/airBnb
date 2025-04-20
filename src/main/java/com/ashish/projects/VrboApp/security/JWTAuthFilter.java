@@ -37,25 +37,20 @@ public class JWTAuthFilter extends OncePerRequestFilter {
         try {
             final String requestTokenHeader = request.getHeader("Authorization");
 
-            // Step 1: Check if header is null or doesn't start properly
             if (requestTokenHeader == null || !requestTokenHeader.startsWith("Bearer ")) {
                 filterChain.doFilter(request, response);
                 return;
             }
 
-            // Step 2: Extract token safely
             String token = requestTokenHeader.substring(7).trim();
 
-            // Step 3: If token is empty, skip
             if (token.contains(" ")) {
                 throw new IllegalArgumentException("Invalid JWT: token contains whitespace");
 
             }
 
-            // Step 4: Get userId from token
             Long userId = jwtService.getUserIdFromToken(token);
 
-            // Step 5: Set authentication in context if not already present
             if (userId != null && SecurityContextHolder.getContext().getAuthentication() == null) {
                 User user = userService.getUserById(userId);
 
@@ -72,7 +67,6 @@ public class JWTAuthFilter extends OncePerRequestFilter {
             filterChain.doFilter(request, response);
 
         } catch (JwtException | IllegalArgumentException ex) {
-            // Handle invalid token gracefully
             handlerExceptionResolver.resolveException(request, response, null, ex);
         }
     }

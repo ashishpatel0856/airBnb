@@ -16,14 +16,13 @@ import java.time.LocalDate;
 import java.util.List;
 
 @RestController
-@RequestMapping("/admin/hotels")
+@RequestMapping("admin/hotels")
 @RequiredArgsConstructor
 @Slf4j
 public class HotelController {
 
     private final HotelService hotelService;
     private final BookingService bookingService;
-
     @PostMapping
     @Operation(summary = "Create a new hotel", tags = {"Admin Hotel"})
     public ResponseEntity<HotelDto> createNewHotel(@RequestBody HotelDto hotelDto) {
