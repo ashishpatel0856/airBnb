@@ -47,11 +47,5 @@ public class Room {
     @UpdateTimestamp
     private LocalDateTime updatedAt;
 
-    public BigDecimal getBaseprice() {
-         return    this.basePrice = basePrice;
-    }
 
-    public BigDecimal getBasePrice() {
-      return   this.basePrice = basePrice;
-    }
 }

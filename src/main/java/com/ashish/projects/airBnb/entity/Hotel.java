@@ -41,12 +41,11 @@ public class Hotel {
     @Column(nullable = false)
     private Boolean active;
 
-//    @ManyToOne
-//    @JoinColumn(name = "owner_id")  // Ensure this matches the column name in the database
-//    private User owner;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "owner_id")  // Ensure this matches the column name in the database
+    private User user;
 
-    @OneToMany(mappedBy = "hotel")
-    @JsonIgnore
+    @OneToMany(mappedBy = "hotel",fetch = FetchType.LAZY)
     private List<Room> rooms;
 
 }

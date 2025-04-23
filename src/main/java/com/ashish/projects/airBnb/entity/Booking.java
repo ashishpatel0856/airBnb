@@ -30,9 +30,9 @@ public class Booking {
     @JoinColumn(name= "room_id", nullable = false)
     private Room room;
 
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "user_id", nullable = false)
-//    private User user;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
 
     @Column(nullable = false)
     private Integer roomsCount;
@@ -49,9 +49,15 @@ public class Booking {
     @UpdateTimestamp
     private LocalDateTime updatedAt;
 
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    private BookingStatus bookingStatus;
+
+    @OneToOne(fetch = FetchType.LAZY)
+    private Payment payment;
+
+//
+//    @Enumerated(EnumType.STRING)
+//    @Column(nullable = false,name = "payment_id")
+//    private BookingStatus bookingStatus;
+
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
@@ -63,8 +69,8 @@ public class Booking {
 
     @Column(nullable = false, precision = 10, scale = 2)
     private BigDecimal amount;
-
-    @Column(unique = true)
-    private String paymentSessionId;
+//
+//    @Column(unique = true)
+//    private String paymentSessionId;
 
 }
