@@ -1,0 +1,70 @@
+package com.ashish.projects.airBnb.service;
+
+import com.ashish.projects.airBnb.dto.RoomDto;
+import com.ashish.projects.airBnb.entity.Hotel;
+import com.ashish.projects.airBnb.entity.Room;
+import com.ashish.projects.airBnb.exceptions.ResourceNotFoundException;
+import com.ashish.projects.airBnb.repository.HotelRepository;
+import com.ashish.projects.airBnb.repository.RoomRepository;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.modelmapper.ModelMapper;
+import org.springframework.stereotype.Service;
+
+import java.util.stream.Collectors;
+
+@Service
+@RequiredArgsConstructor
+@Slf4j
+public class RoomServiceImpl implements RoomService {
+
+    private final RoomRepository roomRepository;
+    private final HotelRepository hotelRepository;
+    private final ModelMapper modelMapper;
+
+
+    @Override
+    public RoomDto createNewRoom(Long hotelId,RoomDto roomDto) {
+        log.info("Creating a new room");
+
+        Hotel hotel = hotelRepository
+                .findById(hotelId)
+                .orElseThrow(()-> new ResourceNotFoundException("Hotel not found WITH HOTEL ID: " + hotelId));
+        Room room = modelMapper.map(roomDto, Room.class);
+        room.setHotel(hotel);
+        return modelMapper.map(roomRepository.save(room), RoomDto.class);
+    }
+// create inventory as soon as room is created and if hotel is active
+    @Override
+    public RoomDto getAllRoomsInHotel(long hotelId) {
+        log.info("Getting all the rooms in hotel");
+        Hotel hotel = hotelRepository
+                .findById(hotelId)
+                .orElseThrow(()-> new ResourceNotFoundException("Hotel not found WITH ID: " + hotelId));
+
+        return (RoomDto) hotel.getRooms()
+                .stream()
+                .map((element) -> modelMapper.map(element,RoomDto.class))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public RoomDto getRoomById(long roomId) {
+        log.info("Getting room by ID");
+        Room room = roomRepository
+                .findById(roomId)
+                .orElseThrow(()-> new ResourceNotFoundException("Room not found WITH ID: " + roomId));
+        return modelMapper.map(room,RoomDto.class);
+    }
+
+    @Override
+    public RoomDto deleteRoomById(long roomId) {
+        log.info("Deleting room by ID");
+        boolean exists = roomRepository.existsById(roomId);
+        if (!exists) {
+            throw new ResourceNotFoundException("Room not found WITH ID: " + roomId);
+        }
+        roomRepository.deleteById(roomId);
+        return modelMapper.map(roomRepository.findById(roomId),RoomDto.class);
+    }
+}
