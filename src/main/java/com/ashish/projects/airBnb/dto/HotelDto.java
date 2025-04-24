@@ -13,7 +13,6 @@ public class HotelDto {
     private HotelContactInfo contactInfo;
     private Boolean active;
 
-
     public Long getId() {
         return id;
     }

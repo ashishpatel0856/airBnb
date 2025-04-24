@@ -1,6 +1,6 @@
 package com.ashish.projects.airBnb.entity;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
@@ -17,8 +17,9 @@ public class Hotel {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
+//
     @Column(nullable = false)
+
     private String name;
 
     private String city;
@@ -42,10 +43,11 @@ public class Hotel {
     private Boolean active;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "owner_id")  // Ensure this matches the column name in the database
-    private User user;
+//    @JoinColumn(name = "owner_id")  // Ensure this matches the column name in the database
+    private User owner;
 
     @OneToMany(mappedBy = "hotel",fetch = FetchType.LAZY)
     private List<Room> rooms;
+
 
 }
