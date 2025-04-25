@@ -5,12 +5,14 @@ import com.ashish.projects.airBnb.entity.Hotel;
 import com.ashish.projects.airBnb.entity.Room;
 import com.ashish.projects.airBnb.exceptions.ResourceNotFoundException;
 import com.ashish.projects.airBnb.repository.HotelRepository;
-import jakarta.persistence.Id;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -79,6 +81,18 @@ public class HotelServiceImpl implements HotelService {
         for(Room room: hotel.getRooms()){
             inventoryService.initializeRoomForAYear(room);
         }
+
+    }
+
+    @Override
+    public List<HotelDto> getAllHotels() {
+        log.info("getting all hotels");
+        List<Hotel> hotels = hotelRepository.findAll();
+        return hotels
+                .stream()
+                .map(ele -> modelMapper.map(ele,HotelDto.class))
+                .collect(Collectors.toList());
+
 
     }
 }
