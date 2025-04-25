@@ -2,8 +2,11 @@ package com.ashish.projects.airBnb.service;
 
 import com.ashish.projects.airBnb.dto.HotelDto;
 import com.ashish.projects.airBnb.entity.Hotel;
+import com.ashish.projects.airBnb.entity.Room;
 import com.ashish.projects.airBnb.exceptions.ResourceNotFoundException;
 import com.ashish.projects.airBnb.repository.HotelRepository;
+import jakarta.persistence.Id;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
@@ -16,6 +19,7 @@ public class HotelServiceImpl implements HotelService {
 
     private final HotelRepository hotelRepository;
     private final ModelMapper modelMapper;
+    private final InventoryService inventoryService;
 
 
     @Override
@@ -49,24 +53,32 @@ public class HotelServiceImpl implements HotelService {
     }
 
     @Override
+    @Transactional
     public void deleteHotelById(Long id){
-        log.info("delete hotel by id:{}",id);
-        boolean exists = hotelRepository.existsById(id);
-        if(!exists)
-            throw new ResourceNotFoundException("hotel not found with id:"+id);
-
+        Hotel hotel = hotelRepository.findById(id)
+                .orElseThrow(()->new ResourceNotFoundException("hotel not found with id"));
         hotelRepository.deleteById(id);
 
+        for(Room room: hotel.getRooms()){
+            inventoryService.deleteFutureInventories(room);
+        }
+// delete the future inventory for hotel
 
     }
 
     @Override
+    @Transactional
     public void activateHotel(Long hotelId) {
-        log.info("activating the hotel with id");
-
+        log.info("activating the hotel with id",hotelId);
         Hotel hotel = hotelRepository
                 .findById(hotelId)
                 .orElseThrow(()->new ResourceNotFoundException("hotel not found with id:"+hotelId));
         hotel.setActive(true);
+
+        // creating inventory for all the room for hotels
+        for(Room room: hotel.getRooms()){
+            inventoryService.initializeRoomForAYear(room);
+        }
+
     }
 }

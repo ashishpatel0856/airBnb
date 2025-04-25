@@ -11,6 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
@@ -21,6 +22,7 @@ public class RoomServiceImpl implements RoomService {
     private final RoomRepository roomRepository;
     private final HotelRepository hotelRepository;
     private final ModelMapper modelMapper;
+    private final InventoryService inventoryService;
 
 
     @Override
@@ -32,17 +34,22 @@ public class RoomServiceImpl implements RoomService {
                 .orElseThrow(()-> new ResourceNotFoundException("Hotel not found WITH HOTEL ID: " + hotelId));
         Room room = modelMapper.map(roomDto, Room.class);
         room.setHotel(hotel);
+
+        // create inventory as  room is created and if hotel is active
+if(hotel.getActive()){
+    inventoryService.initializeRoomForAYear(room);
+}
         return modelMapper.map(roomRepository.save(room), RoomDto.class);
     }
-// create inventory as soon as room is created and if hotel is active
+
     @Override
-    public RoomDto getAllRoomsInHotel(long hotelId) {
+    public List<RoomDto> getAllRoomsInHotel(long hotelId) {
         log.info("Getting all the rooms in hotel");
         Hotel hotel = hotelRepository
                 .findById(hotelId)
                 .orElseThrow(()-> new ResourceNotFoundException("Hotel not found WITH ID: " + hotelId));
 
-        return (RoomDto) hotel.getRooms()
+        return  hotel.getRooms()
                 .stream()
                 .map((element) -> modelMapper.map(element,RoomDto.class))
                 .collect(Collectors.toList());
@@ -60,11 +67,18 @@ public class RoomServiceImpl implements RoomService {
     @Override
     public RoomDto deleteRoomById(long roomId) {
         log.info("Deleting room by ID");
-        boolean exists = roomRepository.existsById(roomId);
-        if (!exists) {
-            throw new ResourceNotFoundException("Room not found WITH ID: " + roomId);
-        }
+//        boolean exists = roomRepository.existsById(roomId);
+//        if (!exists) {
+//            throw new ResourceNotFoundException("Room not found WITH ID: " + roomId);
+//        }
+
+        //delete all future inventory for this rooms
+
+        Room room = roomRepository
+                .findById(roomId)
+                .orElseThrow(()-> new ResourceNotFoundException("Room not found WITH ID: " + roomId));
         roomRepository.deleteById(roomId);
-        return modelMapper.map(roomRepository.findById(roomId),RoomDto.class);
+        inventoryService.deleteFutureInventories(room);
+        return modelMapper.map(room,RoomDto.class);
     }
 }
