@@ -7,10 +7,7 @@ import com.ashish.projects.airBnb.dto.GuestDto;
 import com.ashish.projects.airBnb.entity.*;
 import com.ashish.projects.airBnb.entity.enums.BookingStatus;
 import com.ashish.projects.airBnb.exceptions.ResourceNotFoundException;
-import com.ashish.projects.airBnb.repository.BookingRepository;
-import com.ashish.projects.airBnb.repository.HotelRepository;
-import com.ashish.projects.airBnb.repository.InventoryRepository;
-import com.ashish.projects.airBnb.repository.RoomRepository;
+import com.ashish.projects.airBnb.repository.*;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,6 +17,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 
@@ -33,6 +31,7 @@ public class BookingServiceImpl implements BookingService {
     private final ModelMapper modelMapper;
     private final HotelRepository hotelRepository;
     private final InventoryRepository inventoryRepository;
+    private final GuestRepository guestRepository;
 
     @Override
     @Transactional
@@ -61,8 +60,8 @@ public class BookingServiceImpl implements BookingService {
         inventoryRepository.saveAll(inventoryList);
 
         //Create the booking hotel
-        User user = new User();
-        user.setId(1L);
+//        User user = new User();
+//        user.setId(1L);
 
         // calculate dynamic amount
         Booking booking  = Booking.builder()
@@ -71,7 +70,7 @@ public class BookingServiceImpl implements BookingService {
                 .room(room)
                 .checkInDate(bookingRequest.getCheckInDate())
                 .checkOutDate(bookingRequest.getCheckOutDate())
-                .user(user)
+                .user(getCurrentUser())
                 .roomsCount(bookingRequest.getRoomsCount())
                 .amount(BigDecimal.TEN)
                 .build();
@@ -82,7 +81,40 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
-    public BookingDto addGuests(Long bookingId, List<GuestDto> guestDto) {
+    @Transactional
+    public BookingDto addGuests(Long bookingId, List<GuestDto> guestDtoList) {
         log.info("adding guests for booking with id");
+
+        Booking booking = bookingRepository.findById(bookingId).orElseThrow(()-> new ResourceNotFoundException("Booking not found with id"));
+
+        if(hasBookingExpired(booking)){
+            throw new IllegalStateException("Booking is expired");
+        }
+
+        if(booking.getBookingStatus() != BookingStatus.RESERVED){
+            throw new IllegalStateException("Booking is not reserved");
+        }
+
+        for(GuestDto guestDto : guestDtoList){
+            Guest guest = modelMapper.map(guestDto, Guest.class);
+            guest.setUser(getCurrentUser());
+            guest =guestRepository.save(guest);
+            booking.getGuests().add(guest);
+        }
+        booking.setBookingStatus(BookingStatus.GUESTS_ADDED);
+
+     booking = bookingRepository.save(booking);
+        return modelMapper.map(booking, BookingDto.class);
+
+    }
+
+    private boolean hasBookingExpired(Booking booking) {
+        return booking.getCreatedAt().plusMinutes(10).isBefore(LocalDateTime.now());
+    }
+
+    public User getCurrentUser() {
+        User user = new User();
+        user.setId(1L);
+        return user;
     }
 }

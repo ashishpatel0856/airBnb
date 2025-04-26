@@ -1,10 +1,10 @@
 package com.ashish.projects.airBnb.entity;
 
+import com.ashish.projects.airBnb.entity.enums.Role;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.management.relation.Role;
 import java.util.Set;
 
 @Entity

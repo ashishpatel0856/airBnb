@@ -1,8 +1,8 @@
 package com.ashish.projects.airBnb.dto;
 
+import com.ashish.projects.airBnb.entity.User;
 import com.ashish.projects.airBnb.entity.enums.Gender;
 import lombok.Data;
-import org.apache.catalina.User;
 
 @Data
 public class GuestDto {
