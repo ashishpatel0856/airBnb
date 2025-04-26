@@ -53,10 +53,10 @@ public class Booking {
     @OneToOne(fetch = FetchType.LAZY)
     private Payment payment;
 
-//
-//    @Enumerated(EnumType.STRING)
-//    @Column(nullable = false,name = "payment_id")
-//    private BookingStatus bookingStatus;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private BookingStatus bookingStatus;
 
 
     @ManyToMany(fetch = FetchType.LAZY)
@@ -69,6 +69,9 @@ public class Booking {
 
     @Column(nullable = false, precision = 10, scale = 2)
     private BigDecimal amount;
+
+
+
 //
 //    @Column(unique = true)
 //    private String paymentSessionId;

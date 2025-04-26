@@ -1,6 +1,8 @@
 package com.ashish.projects.airBnb.service;
 
 import com.ashish.projects.airBnb.dto.HotelDto;
+import com.ashish.projects.airBnb.dto.HotelInfoDto;
+import com.ashish.projects.airBnb.dto.RoomDto;
 import com.ashish.projects.airBnb.entity.Hotel;
 import com.ashish.projects.airBnb.entity.Room;
 import com.ashish.projects.airBnb.exceptions.ResourceNotFoundException;
@@ -93,6 +95,20 @@ public class HotelServiceImpl implements HotelService {
                 .map(ele -> modelMapper.map(ele,HotelDto.class))
                 .collect(Collectors.toList());
 
+
+    }
+
+    @Override
+    public HotelInfoDto getHotelByInfo(Long hotelId) {
+        Hotel hotel = hotelRepository
+                .findById(hotelId)
+                .orElseThrow(()-> new ResourceNotFoundException("hotel not found with id"));
+
+        List<RoomDto> rooms = hotel.getRooms()
+                .stream()
+                .map((ele -> modelMapper.map(ele, RoomDto.class)))
+                .toList();
+        return new HotelInfoDto(modelMapper.map(hotel,HotelDto.class),rooms);
 
     }
 }

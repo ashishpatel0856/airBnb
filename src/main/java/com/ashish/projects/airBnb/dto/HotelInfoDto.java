@@ -9,5 +9,5 @@ import java.util.List;
 @AllArgsConstructor
 public class HotelInfoDto {
     private HotelDto hotel;
-    private List<RoomPriceResponseDto> rooms;
+    private List<RoomDto> rooms;
 }
