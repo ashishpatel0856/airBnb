@@ -1,10 +1,13 @@
 package com.ashish.projects.airBnb.service;
 
 import com.ashish.projects.airBnb.dto.HotelDto;
+import com.ashish.projects.airBnb.dto.HotelPriceDto;
 import com.ashish.projects.airBnb.dto.HotelSearchRequest;
 import com.ashish.projects.airBnb.entity.Hotel;
+import com.ashish.projects.airBnb.entity.HotelMinPrice;
 import com.ashish.projects.airBnb.entity.Inventory;
 import com.ashish.projects.airBnb.entity.Room;
+import com.ashish.projects.airBnb.repository.HotelMinPriceRepository;
 import com.ashish.projects.airBnb.repository.InventoryRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -26,6 +29,7 @@ public class InventoryServiceImpl implements InventoryService {
 
     private final InventoryRepository inventoryRepository;
     private final ModelMapper modelMapper;
+    private final HotelMinPriceRepository hotelMinPriceRepository;
 
 
     @Override
@@ -57,16 +61,18 @@ public class InventoryServiceImpl implements InventoryService {
     }
 
     @Override
-    public Page<HotelDto> searchHotels(HotelSearchRequest hotelSearchRequest) {
+    public Page<HotelPriceDto> searchHotels(HotelSearchRequest hotelSearchRequest) {
         log.info("searching hotels for city startdate to enddate");
         Pageable pageable = PageRequest.of(hotelSearchRequest.getPage(), hotelSearchRequest.getSize());
         Long dateCount =
                 ChronoUnit.DAYS.between(hotelSearchRequest.getStartDate(), hotelSearchRequest.getEndDate()) +1;
-       Page<Hotel> hotelPage= inventoryRepository.findHotelswithAvailableRoom(hotelSearchRequest.getCity(),
+// business logic 90days
+
+       Page<HotelPriceDto> hotelPage= hotelMinPriceRepository.findHotelswithAvailableRoom(hotelSearchRequest.getCity(),
                 hotelSearchRequest.getStartDate(),
                 hotelSearchRequest.getEndDate(),
                 hotelSearchRequest.getRoomsCount(),
         dateCount,pageable);
-        return hotelPage.map(hotel -> modelMapper.map(hotel, HotelDto.class));
+       return hotelPage;
     }
 }
