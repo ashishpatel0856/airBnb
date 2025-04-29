@@ -1,5 +1,6 @@
 package com.ashish.projects.airBnb.security;
 
+
 import com.ashish.projects.airBnb.entity.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -14,7 +15,7 @@ import java.util.Date;
 @Service
 public class JWTService {
 
-    @Value("$jwt.secretKey")
+    @Value("${jwt.secretKey}")
     private String jwtSecretKey;
 
     private SecretKey getSecretKey() {
@@ -23,8 +24,8 @@ public class JWTService {
         }
         public String generateAccessToken(User user) {
         return Jwts.builder()
-                .setSubject(user.getUsername())
-                .claim("email",user.getEmail())
+                .subject(user.getId().toString())
+                .claim("email", user.getEmail())
                 .claim("roles",user.getRoles().toString())
                 .issuedAt(new Date())
                 .expiration(new Date(System.currentTimeMillis()+1000*60*10)) // for ten minuts
@@ -33,8 +34,7 @@ public class JWTService {
     }
     public String generateRefreshToken(User user) {
         return Jwts.builder()
-//                .subject(user.getId().toString)
-                .setSubject(user.getUsername())
+                .subject(user.getId().toString())
                 .issuedAt(new Date())
                 .expiration(new Date(System.currentTimeMillis()+1000L *60*60*24*30*6))
                 .signWith(getSecretKey())
