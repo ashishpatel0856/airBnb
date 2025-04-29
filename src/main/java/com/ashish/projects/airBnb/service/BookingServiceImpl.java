@@ -15,13 +15,17 @@ import lombok.extern.slf4j.Slf4j;
 
 
 import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PostMapping;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -34,7 +38,10 @@ public class BookingServiceImpl implements BookingService {
     private final HotelRepository hotelRepository;
     private final InventoryRepository inventoryRepository;
     private final GuestRepository guestRepository;
+    private final CheckoutService checkoutService;
 
+    @Value("${frontend.url}")
+    private String frontendUrl;
     @Override
     @Transactional
     public BookingDto initialiseBooking(BookingRequest bookingRequest) {
@@ -123,6 +130,29 @@ public class BookingServiceImpl implements BookingService {
         return modelMapper.map(booking, BookingDto.class);
 
     }
+
+    // for payments
+    @Override
+    public String initiatePayment(Long bookingId) {
+        Booking booking = bookingRepository.findById(bookingId).orElseThrow(()-> new ResourceNotFoundException("Booking not found with id"));
+
+        User user = getCurrentUser();
+        if(!user.equals(booking.getUser())){
+            throw new UnAuthorisedExceptionn("booking does not belong to this user");
+
+        }
+        if(hasBookingExpired(booking)){
+            throw new IllegalStateException("Booking is expired");
+        }
+        // how to payment create
+        String sessionUrl = checkoutService.getCheckoutSession(booking,frontendUrl+"/payments/success",frontendUrl+"/payments/failure");
+
+        booking.setBookingStatus(BookingStatus.PAYMENTS_PENDING);
+         bookingRepository.save(booking);
+        return sessionUrl;
+    }
+
+
 
     private boolean hasBookingExpired(Booking booking) {
         return booking.getCreatedAt().plusMinutes(10).isBefore(LocalDateTime.now());

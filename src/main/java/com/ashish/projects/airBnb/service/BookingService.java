@@ -10,4 +10,6 @@ public interface BookingService {
     BookingDto initialiseBooking(BookingRequest bookingRequest);
 
     BookingDto addGuests(Long bookingId, List<GuestDto> guestDto);
+
+    String initiatePayment(Long bookingId);
 }

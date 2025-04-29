@@ -72,8 +72,8 @@ public class Booking {
 
 
 
-//
-//    @Column(unique = true)
-//    private String paymentSessionId;
+
+    @Column(unique = true)
+    private String paymentSessionId;
 
 }
