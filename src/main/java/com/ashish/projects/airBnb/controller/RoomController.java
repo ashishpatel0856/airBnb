@@ -7,8 +7,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Collections;
 import java.util.List;
 
 @RestController
@@ -28,6 +26,7 @@ public class RoomController {
         List<RoomDto> roomDto = roomService.getAllRoomsInHotel(hotelId);
         return  new ResponseEntity<>(roomDto, HttpStatus.OK);
     }
+
     @GetMapping("/{roomId}")
     public ResponseEntity<RoomDto> getRoomById(@PathVariable Long hotelId,@PathVariable Long roomId) {
         RoomDto roomDto = roomService.getRoomById(roomId);

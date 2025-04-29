@@ -93,7 +93,7 @@ if(hotel.getActive()){
                 .findById(roomId)
                 .orElseThrow(()-> new ResourceNotFoundException("Room not found WITH ID: " + roomId));
 
-        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal(); // ✅ This will work
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         if(!user.equals(room.getHotel().getOwner())){
             throw new UnAuthorisedExceptionn("this user does not own this room with id"+roomId);
         }

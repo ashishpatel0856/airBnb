@@ -7,12 +7,15 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.WebAuthenticationDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.web.filter.OncePerRequestFilter;
+import org.springframework.web.servlet.HandlerExceptionResolver;
 
 import java.io.IOException;
 // handle for jwtauthfilter logics
@@ -22,9 +25,12 @@ public class JWTAuthFilter extends OncePerRequestFilter {
     private final JWTService jwtService;
     private final UserService userService;
 
+   @Autowired
+   @Qualifier("handlerExceptionResolver")
+   private HandlerExceptionResolver handlerExceptionResolver;
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-
+    try {
         final String requestTokenHeader = request.getHeader("Authorization");
         if (requestTokenHeader == null || requestTokenHeader.startsWith("Bearer ")) {
             filterChain.doFilter(request, response);
@@ -46,5 +52,8 @@ public class JWTAuthFilter extends OncePerRequestFilter {
 
         }
         filterChain.doFilter(request, response);
+    } catch (Exception e) {
+         handlerExceptionResolver.resolveException(request, response, null, e);
+    }
     }
 }

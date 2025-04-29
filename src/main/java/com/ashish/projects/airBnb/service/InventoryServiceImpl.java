@@ -3,8 +3,7 @@ package com.ashish.projects.airBnb.service;
 import com.ashish.projects.airBnb.dto.HotelDto;
 import com.ashish.projects.airBnb.dto.HotelPriceDto;
 import com.ashish.projects.airBnb.dto.HotelSearchRequest;
-import com.ashish.projects.airBnb.entity.Hotel;
-import com.ashish.projects.airBnb.entity.HotelMinPrice;
+
 import com.ashish.projects.airBnb.entity.Inventory;
 import com.ashish.projects.airBnb.entity.Room;
 import com.ashish.projects.airBnb.repository.HotelMinPriceRepository;

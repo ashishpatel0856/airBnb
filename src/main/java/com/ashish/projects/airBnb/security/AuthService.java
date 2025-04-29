@@ -49,4 +49,11 @@ public class AuthService {
        return arr;
 
     }
+
+    public String refreshToken(String refreshToken) {
+        Long id = jwtService.getUserIdFromToken(refreshToken);
+
+        User user = userRepository.findById(id).orElse(null);
+        return jwtService.generateRefreshToken(user);
+    }
 }
