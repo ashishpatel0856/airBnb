@@ -22,7 +22,7 @@ public class InventoryController {
     }
 
     @PatchMapping("/rooms/{roomId}")
-    public ResponseEntity<Void> updateInventory(@PathVariable Long roomId, @RequestBody UpdateInventoryRequestDto updateInventoryRequestDto){
+    public ResponseEntity<Void> updateInventory(@PathVariable Long roomId, @RequestBody UpdateInventoryRequestDto updateInventoryRequestDto) throws AccessDeniedException {
         inventoryService.updateInventory(roomId,updateInventoryRequestDto);
         return ResponseEntity.noContent().build();
     }

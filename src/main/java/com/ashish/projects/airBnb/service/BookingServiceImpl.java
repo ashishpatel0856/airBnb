@@ -24,7 +24,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Value;
 
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -284,29 +283,45 @@ public class BookingServiceImpl implements BookingService {
                 .collect(Collectors.toList());
     }
 
-
-
     @Override
     public HotelReportDto getHotelReport(Long hotelId, LocalDate startDate, LocalDate endDate) {
-        Hotel hotel = hotelRepository.findById(hotelId).orElseThrow(()-> new ResourceNotFoundException("HOTEL ID NOT FOUND"));
-        User user = getCurrentUser();
+        return null;
+    }
 
-        if(!user.equals(hotel.getOwner())) throw new UnAuthorisedExceptionn("you are not hotel owner");
-         LocalDateTime startDateTime = startDate.atStartOfDay();
-         LocalDateTime endDateTime = endDate.atTime(LocalTime.MAX);
-         List<Booking> bookings = bookingRepository.findByHotelAndCreatsAtBetween(hotel, startDateTime, endDateTime);
-         Long totalConfirmedBookings = bookings
-                 .stream()
-                 .filter(ele -> ele.getBookingStatus() == BookingStatus.CONFIRMED)
-                 .count();
-         BigDecimal totalRevenueOfconfirmedbookins = bookings
-                 .stream()
-                 .filter((ele ->ele.getBookingStatus() == BookingStatus.CONFIRMED))
-                 .map(Booking::getAmount)
-                 .reduce(BigDecimal.ZERO, BigDecimal::add);
-         BigDecimal avgRevenue = totalConfirmedBookings ==0? BigDecimal.ZERO :
-                 totalRevenueOfconfirmedbookins.divide(BigDecimal.valueOf(totalConfirmedBookings) , RoundingMode.HALF_DOWN);
-        return new HotelReportDto(totalConfirmedBookings,totalRevenueOfconfirmedbookins,avgRevenue);
+
+//    @Override
+//    @Transactional
+//    public HotelReportDto getHotelReport(Long hotelId, LocalDate startDate, LocalDate endDate) {
+//        Hotel hotel = hotelRepository.findById(hotelId).orElseThrow(()-> new ResourceNotFoundException("HOTEL ID NOT FOUND"));
+//        User user = getCurrentUser();
+//
+//        if(!user.equals(hotel.getOwner())) throw new UnAuthorisedExceptionn("you are not hotel owner");
+//         LocalDateTime startDateTime = startDate.atStartOfDay();
+//         LocalDateTime endDateTime = endDate.atTime(LocalTime.MAX);
+//         List<Booking> bookings = bookingRepository.findByHotelAndCreateAtBetween(hotel, startDateTime, endDateTime);
+//         Long totalConfirmedBookings = bookings
+//                 .stream()
+//                 .filter(ele -> ele.getBookingStatus() == BookingStatus.CONFIRMED)
+//                 .count();
+//         BigDecimal totalRevenueOfconfirmedbookins = bookings
+//                 .stream()
+//                 .filter((ele ->ele.getBookingStatus() == BookingStatus.CONFIRMED))
+//                 .map(Booking::getAmount)
+//                 .reduce(BigDecimal.ZERO, BigDecimal::add);
+//         BigDecimal avgRevenue = totalConfirmedBookings ==0? BigDecimal.ZERO :
+//                 totalRevenueOfconfirmedbookins.divide(BigDecimal.valueOf(totalConfirmedBookings) , RoundingMode.HALF_DOWN);
+//        return new HotelReportDto(totalConfirmedBookings,totalRevenueOfconfirmedbookins,avgRevenue);
+//    }
+
+    @Override
+    @Transactional
+    public List<BookingDto> getMyBookings() {
+        User user = getCurrentUser();
+        return bookingRepository.findByUser(user)
+                .stream()
+                .map((ele) -> modelMapper.map(ele,BookingDto.class))
+                .collect(Collectors.toList());
+
     }
 
 

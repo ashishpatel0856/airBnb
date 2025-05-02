@@ -8,7 +8,6 @@ import com.stripe.model.Event;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Map;
 
 public interface BookingService {
     BookingDto initialiseBooking(BookingRequest bookingRequest);
@@ -26,4 +25,6 @@ public interface BookingService {
     List<BookingDto> getAllBookingsByHotelId(Long hotelId);
 
     HotelReportDto getHotelReport(Long hotelId, LocalDate startDate, LocalDate endDate);
+
+    List<BookingDto> getMyBookings();
 }
