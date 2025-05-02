@@ -8,6 +8,7 @@ import com.ashish.projects.airBnb.exceptions.ResourceNotFoundException;
 import com.ashish.projects.airBnb.exceptions.UnAuthorisedExceptionn;
 import com.ashish.projects.airBnb.repository.HotelRepository;
 import com.ashish.projects.airBnb.repository.RoomRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
@@ -16,6 +17,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.stream.Collectors;
+
+import static com.ashish.projects.airBnb.util.AppUtils.getCurrentUser;
 
 @Service
 @RequiredArgsConstructor
@@ -102,5 +105,26 @@ if(hotel.getActive()){
         roomRepository.deleteById(roomId);
         inventoryService.deleteFutureInventories(room);
         return modelMapper.map(room,RoomDto.class);
+    }
+
+    @Override
+    @Transactional
+    public RoomDto updateRoomByRoomId(Long hotelId, Long roomId, RoomDto roomDto) {
+        log.info("Updating room by ID");
+        Hotel hotel = hotelRepository
+                .findById(hotelId)
+                .orElseThrow(()->new ResourceNotFoundException("hotel not found with id:"+hotelId));
+
+        User user = getCurrentUser();
+        if(!user.equals(hotel.getOwner())){
+            throw new UnAuthorisedExceptionn("this user does not own this hotel with id"+hotelId);
+        }
+
+        Room room = roomRepository.findById(roomId)
+                .orElseThrow(()-> new ResourceNotFoundException("Room not found with id:"+roomId));
+        room.setId(roomId);
+        room = roomRepository.save(room);
+        return modelMapper.map(room,RoomDto.class);
+
     }
 }

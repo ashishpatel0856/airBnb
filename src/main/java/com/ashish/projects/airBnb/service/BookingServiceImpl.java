@@ -4,6 +4,7 @@ import com.ashish.projects.airBnb.dto.BookingDto;
 import com.ashish.projects.airBnb.dto.BookingRequest;
 
 import com.ashish.projects.airBnb.dto.GuestDto;
+import com.ashish.projects.airBnb.dto.HotelReportDto;
 import com.ashish.projects.airBnb.entity.*;
 import com.ashish.projects.airBnb.entity.enums.BookingStatus;
 import com.ashish.projects.airBnb.exceptions.ResourceNotFoundException;
@@ -27,9 +28,15 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
+import java.util.stream.Collectors;
+
+import static com.ashish.projects.airBnb.util.AppUtils.getCurrentUser;
 
 @Service
 @RequiredArgsConstructor
@@ -264,12 +271,50 @@ public class BookingServiceImpl implements BookingService {
         return booking.getBookingStatus().name();
     }
 
+    @Override
+    public List<BookingDto> getAllBookingsByHotelId(Long hotelId) {
+        Hotel hotel = hotelRepository.findById(hotelId).orElseThrow(()-> new ResourceNotFoundException("HOTEL ID NOT FOUND"));
+        User user = getCurrentUser();
+
+        if(!user.equals(hotel.getOwner())) throw new UnAuthorisedExceptionn("you are not hotel owner");
+        List<Booking> bookings = bookingRepository.findByHotel(hotel);
+        return bookings
+                .stream()
+                .map(ele -> modelMapper.map(ele,BookingDto.class))
+                .collect(Collectors.toList());
+    }
+
+
+
+    @Override
+    public HotelReportDto getHotelReport(Long hotelId, LocalDate startDate, LocalDate endDate) {
+        Hotel hotel = hotelRepository.findById(hotelId).orElseThrow(()-> new ResourceNotFoundException("HOTEL ID NOT FOUND"));
+        User user = getCurrentUser();
+
+        if(!user.equals(hotel.getOwner())) throw new UnAuthorisedExceptionn("you are not hotel owner");
+         LocalDateTime startDateTime = startDate.atStartOfDay();
+         LocalDateTime endDateTime = endDate.atTime(LocalTime.MAX);
+         List<Booking> bookings = bookingRepository.findByHotelAndCreatsAtBetween(hotel, startDateTime, endDateTime);
+         Long totalConfirmedBookings = bookings
+                 .stream()
+                 .filter(ele -> ele.getBookingStatus() == BookingStatus.CONFIRMED)
+                 .count();
+         BigDecimal totalRevenueOfconfirmedbookins = bookings
+                 .stream()
+                 .filter((ele ->ele.getBookingStatus() == BookingStatus.CONFIRMED))
+                 .map(Booking::getAmount)
+                 .reduce(BigDecimal.ZERO, BigDecimal::add);
+         BigDecimal avgRevenue = totalConfirmedBookings ==0? BigDecimal.ZERO :
+                 totalRevenueOfconfirmedbookins.divide(BigDecimal.valueOf(totalConfirmedBookings) , RoundingMode.HALF_DOWN);
+        return new HotelReportDto(totalConfirmedBookings,totalRevenueOfconfirmedbookins,avgRevenue);
+    }
+
 
     private boolean hasBookingExpired(Booking booking) {
         return booking.getCreatedAt().plusMinutes(10).isBefore(LocalDateTime.now());
     }
 
-    public User getCurrentUser() {
-        return (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-    }
+//    public User getCurrentUser() {
+//        return (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+//    }
 }

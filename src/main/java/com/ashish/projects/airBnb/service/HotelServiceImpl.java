@@ -19,6 +19,8 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static com.ashish.projects.airBnb.util.AppUtils.getCurrentUser;
+
 @Service
 @RequiredArgsConstructor
 @Slf4j
@@ -121,12 +123,13 @@ public class HotelServiceImpl implements HotelService {
     @Override
     public List<HotelDto> getAllHotels() {
         log.info("getting all hotels");
-        List<Hotel> hotels = hotelRepository.findAll();
-        return hotels
+        User user = getCurrentUser();
+
+        List<Hotel> hotels = hotelRepository.findByOwner(user);
+      return hotels
                 .stream()
                 .map(ele -> modelMapper.map(ele,HotelDto.class))
                 .collect(Collectors.toList());
-
 
     }
 
