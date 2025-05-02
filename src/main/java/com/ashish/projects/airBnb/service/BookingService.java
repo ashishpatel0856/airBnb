@@ -3,8 +3,10 @@ package com.ashish.projects.airBnb.service;
 import com.ashish.projects.airBnb.dto.BookingDto;
 import com.ashish.projects.airBnb.dto.BookingRequest;
 import com.ashish.projects.airBnb.dto.GuestDto;
+import com.stripe.model.Event;
 
 import java.util.List;
+import java.util.Map;
 
 public interface BookingService {
     BookingDto initialiseBooking(BookingRequest bookingRequest);
@@ -12,4 +14,10 @@ public interface BookingService {
     BookingDto addGuests(Long bookingId, List<GuestDto> guestDto);
 
     String initiatePayment(Long bookingId);
+
+    void capturePayment(Event event);
+
+    void cancelBooking(Long bookingId);
+
+    String getBookingStatus(Long bookingId);
 }

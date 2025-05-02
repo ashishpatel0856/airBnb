@@ -3,8 +3,10 @@ package com.ashish.projects.airBnb.controller;
 import com.ashish.projects.airBnb.dto.BookingDto;
 import com.ashish.projects.airBnb.dto.BookingRequest;
 import com.ashish.projects.airBnb.dto.GuestDto;
+import com.ashish.projects.airBnb.repository.BookingRepository;
 import com.ashish.projects.airBnb.service.BookingService;
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,6 +19,7 @@ import java.util.Map;
 public class HotelBookingController {
 
     private final BookingService bookingService;
+    private final BookingRepository bookingRepository;
 
     @PostMapping("/init")
     public ResponseEntity<BookingDto> initialiseBooking(@RequestBody BookingRequest bookingRequest) {
@@ -32,6 +35,19 @@ public class HotelBookingController {
     public ResponseEntity<Map<String,String>> initiatePayment(@PathVariable Long bookingId) {
         String sessionUrl = bookingService.initiatePayment(bookingId);
         return ResponseEntity.ok(Map.of("sessionUrl", sessionUrl));
+    }
+
+    @PostMapping("/{bookingId}/cancel")
+    public ResponseEntity<Void> cancelBooking(@PathVariable Long bookingId) {
+        bookingService.cancelBooking(bookingId);
+        return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/{bookingId}/status")
+    public ResponseEntity<Map<String,String>> getBookingStatus(@PathVariable Long bookingId) {
+
+        return ResponseEntity.ok(Map.of("status",bookingService.getBookingStatus(bookingId)));
+
     }
 
 }
