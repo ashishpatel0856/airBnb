@@ -121,6 +121,7 @@ public class HotelServiceImpl implements HotelService {
     }
 
     @Override
+    @Transactional
     public List<HotelDto> getAllHotels() {
         log.info("getting all hotels");
         User user = getCurrentUser();
@@ -134,6 +135,7 @@ public class HotelServiceImpl implements HotelService {
     }
 
     @Override
+    @Transactional
     public HotelInfoDto getHotelByInfo(Long hotelId) {
         Hotel hotel = hotelRepository
                 .findById(hotelId)

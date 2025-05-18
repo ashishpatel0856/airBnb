@@ -37,6 +37,7 @@ public class User implements UserDetails {
 
     @Enumerated(EnumType.STRING)
      private Gender gender;
+
     @ElementCollection(fetch = FetchType.EAGER)
     @Enumerated(EnumType.STRING)
     private Set<Role> roles;
