@@ -13,7 +13,7 @@ public class LoggingAspects {
 
     private static final Logger log = LoggerFactory.getLogger(LoggingAspects.class);
 
-    @Before("execution(* com.ashish.projects.airBnb.service.*.*(..))")
+    @Before("execution(* com.ashish.projects.airBnb.service.*.*(..))")// all serivce ke api ko chalane pr ye phle console me print ho jayega
     public void debugProxy(JoinPoint joinPoint) {
         log.info("Proxy target: {}", joinPoint.getTarget().getClass());
     }
