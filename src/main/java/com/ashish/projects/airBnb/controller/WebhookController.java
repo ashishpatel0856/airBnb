@@ -12,13 +12,16 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/webhook")
-@RequiredArgsConstructor
 public class WebhookController {
 
     private final BookingService bookingService;
 
     @Value("${STRIPE_WEBHOOK_SECRET}")
     private  String endPointSecret;
+
+    public WebhookController(BookingService bookingService) {
+        this.bookingService = bookingService;
+    }
 
     @PostMapping("/payment")
     public ResponseEntity<Void> capturePayments(@RequestBody String payload , @RequestHeader("Stripe-Signature") String signHeader) {
