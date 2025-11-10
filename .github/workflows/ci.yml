@@ -1,6 +1,5 @@
 name: Spring Boot CI - Java 17
 
-# Trigger workflow on push or PR to main or develop
 on:
   push:
     branches: [ main, develop ]
@@ -18,11 +17,11 @@ jobs:
     steps:
       # 1️⃣ Checkout repo
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       # 2️⃣ Set up Java
       - name: Set up Java ${{ matrix.java-version }}
-        uses: actions/setup-java@v3
+        uses: actions/setup-java@v4
         with:
           java-version: ${{ matrix.java-version }}
           distribution: 'temurin'
@@ -31,9 +30,9 @@ jobs:
       - name: Check Java version
         run: java -version
 
-      # 4️⃣ Cache Maven dependencies (speeds up build)
+      # 4️⃣ Cache Maven dependencies
       - name: Cache Maven packages
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: ~/.m2/repository
           key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
@@ -50,20 +49,20 @@ jobs:
 
       # 7️⃣ Run Static Code Analysis (Checkstyle)
       - name: Run Checkstyle
-        run: mvn checkstyle:check || true   # temporary true to avoid CI fail
+        run: mvn checkstyle:check || true   # prevents CI fail due to minor style issues
 
-      # 8️⃣ Generate Code Coverage (JaCoCo)
+      # 8️⃣ Generate Code Coverage
       - name: Generate Code Coverage
         run: mvn jacoco:report
 
-      # 9️⃣ Debug target folder (to check JAR)
+      # 9️⃣ Debug target folder
       - name: Debug target folder
         run: ls -la target
 
       # 🔟 Archive build artifact (JAR)
       - name: Archive JAR
         if: success()
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: spring-boot-app
           path: target/*.jar
