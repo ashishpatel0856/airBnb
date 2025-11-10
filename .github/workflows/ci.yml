@@ -1,6 +1,7 @@
 name: Spring Boot CI - Java 17
 
 on:
+  workflow_dispatch:        # ✅ Manual run button enable karega
   push:
     branches: [ main, develop ]
   pull_request:
@@ -61,7 +62,7 @@ jobs:
 
       # 🔟 Archive build artifact (JAR)
       - name: Archive JAR
-        if: success()
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: spring-boot-app
