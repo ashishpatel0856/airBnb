@@ -10,36 +10,50 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
+    strategy:
+      matrix:
+        java-version: [17]
+
     env:
-      JWT_SECRET_KEY: ${{ secrets.JWT_SECRET_KEY }}
+      # 🧩 Environment variables for application
+      SPRING_PROFILES_ACTIVE: test
       STRIPE_SECRET_KEY: ${{ secrets.STRIPE_SECRET_KEY }}
       STRIPE_WEBHOOK_SECRET: ${{ secrets.STRIPE_WEBHOOK_SECRET }}
+      JWT_SECRET_KEY: ${{ secrets.JWT_SECRET_KEY }}
 
     steps:
+      # 1️⃣ Checkout code from GitHub
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Set up Java
+      # 2️⃣ Set up Java 17 with Maven cache
+      - name: Set up Java ${{ matrix.java-version }}
         uses: actions/setup-java@v4
         with:
-          java-version: 17
+          java-version: ${{ matrix.java-version }}
           distribution: 'temurin'
           cache: maven
 
-      - name: Verify Java version
+      # 3️⃣ Verify Java version
+      - name: Verify Java Installation
         run: java -version
 
-      # Run tests using H2 (via test profile)
-      - name: Build & Run Tests
-        run: mvn clean verify -B
+      # 4️⃣ Build & run tests
+      - name: Build and Run Tests
+        run: mvn clean install -B -V
 
-      - name: Upload build artifact
+      # 5️⃣ Upload test results if failure occurs
+      - name: Upload Test Reports (on failure)
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-reports
+          path: target/surefire-reports/
+
+      # 6️⃣ Upload the built JAR as an artifact (for deployment)
+      - name: Upload Build Artifact
         if: success()
         uses: actions/upload-artifact@v4
         with:
-          name: airbnb-app
+          name: airbnb-app-jar
           path: target/*.jar
-env:
-  STRIPE_SECRET_KEY: ${{ secrets.STRIPE_SECRET_KEY }}
-  STRIPE_WEBHOOK_SECRET: ${{ secrets.STRIPE_WEBHOOK_SECRET }}
-  JWT_SECRET_KEY: ${{ secrets.JWT_SECRET_KEY }}
