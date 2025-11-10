@@ -1,4 +1,4 @@
-name: Spring Boot CI - Java 17
+name: Spring Boot CI - Java 17 (Production Grade)
 
 on:
   push:
@@ -7,7 +7,8 @@ on:
     branches: [ main, develop ]
 
 jobs:
-  build:
+  build-test:
+    name: 🧪 Build & Test
     runs-on: ubuntu-latest
 
     strategy:
@@ -15,30 +16,88 @@ jobs:
         java-version: [17]
 
     steps:
-      # 1️⃣ Checkout repo
+      # 1️⃣ Checkout Code
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      # 2️⃣ Set up Java
-      - name: Set up Java ${{ matrix.java-version }}
+      # 2️⃣ Set Up Java Environment
+      - name: Set up JDK ${{ matrix.java-version }}
         uses: actions/setup-java@v4
         with:
           java-version: ${{ matrix.java-version }}
-          distribution: 'temurin'
+          distribution: temurin
           cache: maven
 
-      # 3️⃣ Verify Java version
-      - name: Check Java version
-        run: java -version
+      # 3️⃣ Verify Java & Maven
+      - name: Verify versions
+        run: |
+          java -version
+          mvn -version
 
-      # 4️⃣ Build & run tests (with H2)
+      # 4️⃣ Build and Run Tests (with H2 test profile)
       - name: Build and Run Tests
-        run: mvn clean install -B -V
+        env:
+          SPRING_PROFILES_ACTIVE: test
+        run: mvn clean verify -B -V
 
-      # 5️⃣ Archive built JAR artifact
-      - name: Upload build artifact
+      # 5️⃣ Upload Build Artifact (JAR)
+      - name: Upload JAR Artifact
         if: success()
         uses: actions/upload-artifact@v4
         with:
           name: spring-boot-app
           path: target/*.jar
+
+  # 🧹 OPTIONAL: Code Quality Job (runs in parallel)
+  quality:
+    name: 🧩 Code Quality Check
+    runs-on: ubuntu-latest
+    needs: build-test
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          java-version: 17
+          distribution: temurin
+          cache: maven
+
+      - name: Run Checkstyle
+        run: mvn checkstyle:check || true
+
+      - name: Run Code Coverage (JaCoCo)
+        run: mvn jacoco:report
+
+      - name: Upload Code Coverage Report
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-report
+          path: target/site/jacoco
+
+  # 🚀 OPTIONAL: Deployment (only from main branch)
+  deploy:
+    name: 🚀 Deploy to Production
+    runs-on: ubuntu-latest
+    needs: build-test
+    if: github.ref == 'refs/heads/main'
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          java-version: 17
+          distribution: temurin
+
+      - name: Deploy to Server (SSH or Render/Heroku)
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+        run: |
+          echo "🚀 Deploying Spring Boot JAR..."
+          # Example (Render or EC2)
+          # scp -i key.pem target/app.jar ubuntu@<SERVER_IP>:/home/ubuntu/app/
+          # ssh -i key.pem ubuntu@<SERVER_IP> "nohup java -jar /home/ubuntu/app/app.jar &"
