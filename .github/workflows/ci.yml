@@ -1,7 +1,6 @@
 name: Spring Boot CI - Java 17
 
 on:
-  workflow_dispatch:        # ✅ Manual run button enable karega
   push:
     branches: [ main, develop ]
   pull_request:
@@ -26,43 +25,19 @@ jobs:
         with:
           java-version: ${{ matrix.java-version }}
           distribution: 'temurin'
+          cache: maven
 
       # 3️⃣ Verify Java version
       - name: Check Java version
         run: java -version
 
-      # 4️⃣ Cache Maven dependencies
-      - name: Cache Maven packages
-        uses: actions/cache@v4
-        with:
-          path: ~/.m2/repository
-          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
-          restore-keys: |
-            ${{ runner.os }}-maven-
-
-      # 5️⃣ Build project with Maven
-      - name: Build with Maven
+      # 4️⃣ Build & run tests (with H2)
+      - name: Build and Run Tests
         run: mvn clean install -B -V
 
-      # 6️⃣ Run Unit Tests
-      - name: Run Tests
-        run: mvn test
-
-      # 7️⃣ Run Static Code Analysis (Checkstyle)
-      - name: Run Checkstyle
-        run: mvn checkstyle:check || true   # prevents CI fail due to minor style issues
-
-      # 8️⃣ Generate Code Coverage
-      - name: Generate Code Coverage
-        run: mvn jacoco:report
-
-      # 9️⃣ Debug target folder
-      - name: Debug target folder
-        run: ls -la target
-
-      # 🔟 Archive build artifact (JAR)
-      - name: Archive JAR
-        if: always()
+      # 5️⃣ Archive built JAR artifact
+      - name: Upload build artifact
+        if: success()
         uses: actions/upload-artifact@v4
         with:
           name: spring-boot-app
