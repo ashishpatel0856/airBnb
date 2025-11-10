@@ -15,14 +15,14 @@ jobs:
         java-version: [17]
 
     env:
-      # 🧩 Environment variables for application
+      # 🧩 Environment variables for Spring Boot
       SPRING_PROFILES_ACTIVE: test
       STRIPE_SECRET_KEY: ${{ secrets.STRIPE_SECRET_KEY }}
       STRIPE_WEBHOOK_SECRET: ${{ secrets.STRIPE_WEBHOOK_SECRET }}
       JWT_SECRET_KEY: ${{ secrets.JWT_SECRET_KEY }}
 
     steps:
-      # 1️⃣ Checkout code from GitHub
+      # 1️⃣ Checkout the repository
       - name: Checkout repository
         uses: actions/checkout@v4
 
@@ -32,17 +32,21 @@ jobs:
         with:
           java-version: ${{ matrix.java-version }}
           distribution: 'temurin'
-          cache: maven
+          cache: 'maven'
 
-      # 3️⃣ Verify Java version
+      # 3️⃣ Verify Java installation
       - name: Verify Java Installation
         run: java -version
 
-      # 4️⃣ Build & run tests
-      - name: Build and Run Tests
-        run: mvn clean install -B -V
+      # 4️⃣ Build project (without running tests)
+      - name: Build Project (skip tests)
+        run: mvn clean package -DskipTests
 
-      # 5️⃣ Upload test results if failure occurs
+      # 5️⃣ Run tests separately (with test profile)
+      - name: Run Tests
+        run: mvn test -B -Dspring.profiles.active=test
+
+      # 6️⃣ Upload test reports only if tests fail
       - name: Upload Test Reports (on failure)
         if: failure()
         uses: actions/upload-artifact@v4
@@ -50,7 +54,7 @@ jobs:
           name: test-reports
           path: target/surefire-reports/
 
-      # 6️⃣ Upload the built JAR as an artifact (for deployment)
+      # 7️⃣ Upload the generated JAR as a build artifact (on success)
       - name: Upload Build Artifact
         if: success()
         uses: actions/upload-artifact@v4
