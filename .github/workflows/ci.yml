@@ -31,7 +31,7 @@ jobs:
 
       # Run tests using H2 (via test profile)
       - name: Build & Run Tests
-        run: mvn clean verify -B -P test
+        run: mvn clean verify -B
 
       - name: Upload build artifact
         if: success()
@@ -39,3 +39,7 @@ jobs:
         with:
           name: airbnb-app
           path: target/*.jar
+env:
+  STRIPE_SECRET_KEY: ${{ secrets.STRIPE_SECRET_KEY }}
+  STRIPE_WEBHOOK_SECRET: ${{ secrets.STRIPE_WEBHOOK_SECRET }}
+  JWT_SECRET_KEY: ${{ secrets.JWT_SECRET_KEY }}
