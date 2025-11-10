@@ -36,7 +36,7 @@ public class WebSecurityConfig {
                         .requestMatchers("/admin/**").hasRole("HOTEL_MANAGER")
                         .requestMatchers("/booking/**").authenticated()
                         .requestMatchers("/users/**").authenticated()
-                        .requestMatchers(  "/v3/api-docs/**",
+                        .requestMatchers(  "/v4/api-docs/**",
                                 "/swagger-ui/**",
                                 "/swagger-ui.html")
                         .authenticated()
