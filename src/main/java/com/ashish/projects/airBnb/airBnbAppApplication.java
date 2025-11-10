@@ -12,9 +12,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 public class airBnbAppApplication {
 
 	public static void main(String[] args) {
-		Dotenv dotenv = Dotenv.load();
-		System.setProperty("STRIPE_SECRET_KEY", dotenv.get("STRIPE_SECRET_KEY"));
-		System.setProperty("STRIPE_WEBHOOK_SECRET", dotenv.get("STRIPE_WEBHOOK_SECRET"));
+
 		SpringApplication.run(airBnbAppApplication.class, args);
 
 	}
