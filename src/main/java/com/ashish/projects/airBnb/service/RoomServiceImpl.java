@@ -47,12 +47,49 @@ public class RoomServiceImpl implements RoomService {
         Room room = modelMapper.map(roomDto, Room.class);
         room.setHotel(hotel);
 
+        // ✅ STEP 1: Save room FIRST
+        Room savedRoom = roomRepository.save(room);
+
+        // ✅ STEP 2: Now create inventory
+        if (hotel.getActive()) {
+            inventoryService.initializeRoomForAYear(savedRoom);
+        }
+
         // create inventory as  room is created and if hotel is active
 if(hotel.getActive()){
     inventoryService.initializeRoomForAYear(room);
 }
         return modelMapper.map(roomRepository.save(room), RoomDto.class);
     }
+
+//    @Override
+//    public RoomDto createNewRoom(Long hotelId, RoomDto roomDto) {
+//        log.info("Creating a new room");
+//
+//        Hotel hotel = hotelRepository.findById(hotelId)
+//                .orElseThrow(() ->
+//                        new ResourceNotFoundException("Hotel not found WITH HOTEL ID: " + hotelId));
+//
+//        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+//        if (!user.equals(hotel.getOwner())) {
+//            throw new UnAuthorisedExceptionn(
+//                    "this user does not own this hotel with id " + hotelId);
+//        }
+//
+//        Room room = modelMapper.map(roomDto, Room.class);
+//        room.setHotel(hotel);
+//
+//        // ✅ 1. Save room ONCE
+//        Room savedRoom = roomRepository.save(room);
+//
+//        // ✅ 2. Create inventory ONCE
+//        if (hotel.getActive()) {
+//            inventoryService.initializeRoomForAYear(savedRoom);
+//        }
+//
+//        // ✅ 3. Return saved room
+//        return modelMapper.map(savedRoom, RoomDto.class);
+//    }
 
     @Override
     public List<RoomDto> getAllRoomsInHotel(long hotelId) {

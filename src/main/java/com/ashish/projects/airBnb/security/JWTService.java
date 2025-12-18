@@ -28,7 +28,7 @@ public class JWTService {
                 .claim("email", user.getEmail())
                 .claim("roles",user.getRoles().toString())
                 .issuedAt(new Date())
-                .expiration(new Date(System.currentTimeMillis()+1000*60*10)) // for ten minuts
+                .expiration(new Date(System.currentTimeMillis()+1000*60*20)) // for ten minuts
                 .signWith(getSecretKey())
                 .compact();
     }
