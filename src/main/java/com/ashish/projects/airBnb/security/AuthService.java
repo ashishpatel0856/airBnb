@@ -4,6 +4,7 @@ import com.ashish.projects.airBnb.dto.LoginDto;
 import com.ashish.projects.airBnb.dto.SignUpRequestDto;
 import com.ashish.projects.airBnb.dto.UserDto;
 import com.ashish.projects.airBnb.entity.User;
+import com.ashish.projects.airBnb.entity.enums.Role;
 import com.ashish.projects.airBnb.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -12,6 +13,9 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.Set;
+
 
 @Service
 @RequiredArgsConstructor
@@ -24,16 +28,26 @@ public class AuthService {
 
     public UserDto signUp(SignUpRequestDto signUpRequestDto) {
 
-         User user = userRepository.findByEmail(signUpRequestDto.getEmail()).orElse(null);
-        if (user != null) {
+        User existingUser = userRepository.findByEmail(signUpRequestDto.getEmail()).orElse(null);
+        if (existingUser != null) {
             throw new RuntimeException("User is already registered with same email");
         }
 
-        User newUser = modelMapper.map(signUpRequestDto, User.class);
+        User newUser = new User();
+        newUser.setName(signUpRequestDto.getName());
+        newUser.setEmail(signUpRequestDto.getEmail());
         newUser.setPassword(passwordEncoder.encode(signUpRequestDto.getPassword()));
-        newUser=userRepository.save(newUser);
+        newUser.setGender(signUpRequestDto.getGender());
+        newUser.setDateOfBirth(signUpRequestDto.getDateOfBirth());
+
+        newUser.setRoles(Set.of(Role.GUEST));
+
+
+        newUser = userRepository.save(newUser);
+
         return modelMapper.map(newUser, UserDto.class);
     }
+
 
     public String[] login(LoginDto loginDto) {
        Authentication authentication=

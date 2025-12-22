@@ -12,22 +12,35 @@ import java.util.List;
 
 @RestControllerAdvice
 public class GlobalResponseHandler implements ResponseBodyAdvice<Object> {
+
     @Override
-    public boolean supports(MethodParameter returnType, Class<? extends HttpMessageConverter<?>> converterType) {
+    public boolean supports(MethodParameter returnType,
+                            Class<? extends HttpMessageConverter<?>> converterType) {
         return true;
     }
 
     @Override
-    public Object beforeBodyWrite(Object body, MethodParameter returnType, MediaType selectedContentType, Class<? extends HttpMessageConverter<?>> selectedConverterType, ServerHttpRequest request, ServerHttpResponse response) {
-        List<String> allowedRoutes = List.of("/v3/api-docs","/actuator");
+    public Object beforeBodyWrite(Object body,
+                                  MethodParameter returnType,
+                                  MediaType selectedContentType,
+                                  Class<? extends HttpMessageConverter<?>> selectedConverterType,
+                                  ServerHttpRequest request,
+                                  ServerHttpResponse response) {
 
-        boolean isAllowed =allowedRoutes
-                .stream()
-                .anyMatch(route -> route.equals(request.getURI().getPath().contains(route)));
+        String path = request.getURI().getPath();
 
-        if(body instanceof ApiResponse<?> || isAllowed) {
+        if (path.startsWith("/v3/api-docs")
+                || path.startsWith("/swagger-ui")
+                || path.startsWith("/swagger-ui.html")
+                || path.startsWith("/api/v1/v3/api-docs")
+                || path.startsWith("/actuator")) {
             return body;
         }
-        return new ApiResponse(body);
-     }
+
+        if (body instanceof ApiResponse<?>) {
+            return body;
+        }
+
+        return new ApiResponse<>(body);
+    }
 }

@@ -1,19 +1,23 @@
 package com.ashish.projects.airBnb.dto;
 
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Size;
+import com.ashish.projects.airBnb.entity.enums.Gender;
+import com.ashish.projects.airBnb.entity.enums.Role;
 import lombok.Data;
+
+import java.time.LocalDate;
+import java.util.Set;
 
 @Data
 public class SignUpRequestDto {
+    private Long id;
     private String name;
-    @NotBlank
-    @Email
     private String email;
-
-    @Size(min = 8)
     private String password;
 
-    private Long id;
+    private Gender gender;
+    private LocalDate dateOfBirth;
+
+    private Set<Role> roles;
+
+
 }
