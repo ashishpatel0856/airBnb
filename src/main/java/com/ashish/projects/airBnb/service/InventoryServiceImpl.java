@@ -41,13 +41,29 @@ public class InventoryServiceImpl implements InventoryService {
 
     @Override
     public void initializeRoomForAYear(Room room) {
-     LocalDate today = LocalDate.now();
-     LocalDate endDate = today.plusYears(1);
-     for(; !today.isAfter(endDate); today=today.plusDays(1)) {
+
+
+        // 🔒 Agar inventory pehle se hai to skip
+        if (inventoryRepository.existsByRoom(room)) {
+            log.info("Inventory already exists for roomId={}, skipping", room.getId());
+            return;
+        }
+
+        LocalDate today = LocalDate.now();
+        LocalDate endDate = today.plusYears(1);
+
+        for (; !today.isAfter(endDate); today = today.plusDays(1)) {
+
+            // 🔒 Date-wise safety
+            if (inventoryRepository.existsByRoomAndDate(room, today)) {
+                continue;
+            }
+
          Inventory inventory =Inventory.builder()
                  .hotel(room.getHotel())
                  .room(room)
                  .bookedCount(0)
+                 .reservedCount(0)
                  .city(room.getHotel().getCity())
                  .date(today)
                  .price(room.getBasePrice())

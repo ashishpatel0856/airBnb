@@ -18,6 +18,10 @@ import java.util.List;
 
 public interface InventoryRepository extends JpaRepository<Inventory, Long> {
     void deleteByDateAfterAndRoom(LocalDate date, Room room);
+    boolean existsByRoom(Room room);
+
+    boolean existsByRoomAndDate(Room room, LocalDate date);
+
 
     @Query("""
    SELECT DISTINCT i.hotel

@@ -15,6 +15,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Set;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -27,10 +28,9 @@ public class AuthService {
     private final JWTService jwtService;
 
     public UserDto signUp(SignUpRequestDto signUpRequestDto) {
-
         User existingUser = userRepository.findByEmail(signUpRequestDto.getEmail()).orElse(null);
         if (existingUser != null) {
-            throw new RuntimeException("User is already registered with same email");
+            throw new RuntimeException("User already registered with same email");
         }
 
         User newUser = new User();
@@ -40,11 +40,14 @@ public class AuthService {
         newUser.setGender(signUpRequestDto.getGender());
         newUser.setDateOfBirth(signUpRequestDto.getDateOfBirth());
 
-        newUser.setRoles(Set.of(Role.GUEST));
-
+        // ✅ Assign roles from request or default
+        if (signUpRequestDto.getRoles() == null || signUpRequestDto.getRoles().isEmpty()) {
+            newUser.setRoles(Set.of(Role.GUEST)); // default
+        } else {
+            newUser.setRoles(signUpRequestDto.getRoles()); // directly set
+        }
 
         newUser = userRepository.save(newUser);
-
         return modelMapper.map(newUser, UserDto.class);
     }
 

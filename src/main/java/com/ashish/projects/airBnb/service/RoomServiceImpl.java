@@ -49,6 +49,7 @@ public class RoomServiceImpl implements RoomService {
 
         // ✅ STEP 1: Save room FIRST
         Room savedRoom = roomRepository.save(room);
+        inventoryService.initializeRoomForAYear(savedRoom);
 
         // ✅ STEP 2: Now create inventory
         if (hotel.getActive()) {
