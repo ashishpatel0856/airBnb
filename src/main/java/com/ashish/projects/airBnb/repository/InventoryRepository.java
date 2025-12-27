@@ -1,5 +1,6 @@
 package com.ashish.projects.airBnb.repository;
 
+import com.ashish.projects.airBnb.dto.HotelPriceDto;
 import com.ashish.projects.airBnb.entity.Hotel;
 import com.ashish.projects.airBnb.entity.Inventory;
 import com.ashish.projects.airBnb.entity.Room;
@@ -23,24 +24,31 @@ public interface InventoryRepository extends JpaRepository<Inventory, Long> {
     boolean existsByRoomAndDate(Room room, LocalDate date);
 
 
+
     @Query("""
-   SELECT DISTINCT i.hotel
-   FROM Inventory i
-   WHERE i.city = :city
-   AND i.date BETWEEN :startDate AND :endDate
-   AND i.closed = false
-   AND (i.totalCount - i.bookedCount) >= :roomsCount
-   GROUP BY i.hotel, i.room
-   HAVING COUNT(i.date) = :dateCount
+SELECT new com.ashish.projects.airBnb.dto.HotelPriceDto(
+    i.hotel,
+    MIN(i.price * i.surgeFactor)
+)
+FROM Inventory i
+WHERE i.hotel.city = :city
+  AND i.date BETWEEN :startDate AND :endDate
+  AND i.closed = false
+  AND i.hotel.active = true
+  AND (i.totalCount - i.bookedCount) >= :roomsCount
+GROUP BY i.hotel
+HAVING COUNT(DISTINCT i.date) = :dateCount
 """)
-    Page<Hotel> findHotelswithAvailableRoom(
-            @Param("city") String city,
-            @Param("startDate") LocalDate startDate,
-            @Param("endDate") LocalDate endDate,
-            @Param("roomsCount") Integer roomsCount,
-            @Param("dateCount") Long dateCount,
+    Page<HotelPriceDto> searchHotels(
+            String city,
+            LocalDate startDate,
+            LocalDate endDate,
+            Integer roomsCount,
+            Long dateCount,
             Pageable pageable
     );
+
+
 
     @Query("""
            SELECT i
@@ -51,7 +59,7 @@ public interface InventoryRepository extends JpaRepository<Inventory, Long> {
    AND (i.totalCount - i.bookedCount - i.reservedCount) >= :roomsCount
            
 """)
-@Lock(LockModeType.PESSIMISTIC_WRITE)
+    @Lock(LockModeType.PESSIMISTIC_WRITE)
     List<Inventory> findAndLockAvailableInventory(
             @Param("roomId") Long roomId,
             @Param("startDate") LocalDate startDate,
@@ -74,7 +82,7 @@ AND i.closed = false
                         @Param("startDate") LocalDate startDate,
                         @Param("endDate") LocalDate endDate,
                         @Param("numberOfRooms") int numberOfRooms
-                        );
+    );
 
 
 
@@ -91,9 +99,9 @@ AND i.reservedCount >= :numberOfRooms
 AND i.closed = false
 """)
     void cancelBooking(@Param("roomId") Long roomId,
-                        @Param("startDate") LocalDate startDate,
-                        @Param("endDate") LocalDate endDate,
-                        @Param("numberOfRooms") int numberOfRooms
+                       @Param("startDate") LocalDate startDate,
+                       @Param("endDate") LocalDate endDate,
+                       @Param("numberOfRooms") int numberOfRooms
     );
 
 
@@ -108,26 +116,26 @@ AND (i.totalCount - i.bookedCount) >= :numberOfRooms
 AND i.closed = false
 """)
     void initBooking(@Param("roomId") Long roomId,
-                       @Param("startDate") LocalDate startDate,
-                       @Param("endDate") LocalDate endDate,
-                       @Param("numberOfRooms") int numberOfRooms
+                     @Param("startDate") LocalDate startDate,
+                     @Param("endDate") LocalDate endDate,
+                     @Param("numberOfRooms") int numberOfRooms
     );
 
 
     List<Inventory> findByHotelAndDateBetween(Hotel hotel, LocalDate startDate, LocalDate endDate);
 
-   List<Inventory> findByRoomOrderByDate(Room room);
+    List<Inventory> findByRoomOrderByDate(Room room);
 
     @Lock(LockModeType.PESSIMISTIC_WRITE)
-     @Query("""
+    @Query("""
                 SELECT i
                 FROM Inventory i
                 WHERE i.room.id = :roomId
                    AND i.date BETWEEN : startDate AND :endDate
 """)
     void getInventoryAndLockBeforeUpdate(@Param("roomId") Long roomId,
-                         @Param("startDate") LocalDate startDate,
-                         @Param("endDate") LocalDate endDate
+                                         @Param("startDate") LocalDate startDate,
+                                         @Param("endDate") LocalDate endDate
 
 
     );
@@ -150,6 +158,6 @@ AND i.date BETWEEN :startDate AND :endDate
                          @Param("closed") boolean closed,
                          @Param("surgeFactor")BigDecimal surgeFactor
 
-                         );
+    );
 
 }

@@ -34,7 +34,7 @@ public class LoggingAspects {
 
 
 
-    @Around("execution(* com.ashish.projects.airBnb.service.*.*(..))")
+//    @Around("execution(* com.ashish.projects.airBnb.service.*.*(..))")
     public Object logBeforeThenAfterMethod(ProceedingJoinPoint joinPoint) throws Throwable {
 
         long startTime = System.currentTimeMillis();

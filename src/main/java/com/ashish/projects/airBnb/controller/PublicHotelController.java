@@ -8,6 +8,7 @@ import com.ashish.projects.airBnb.repository.HotelRepository;
 import com.ashish.projects.airBnb.service.HotelService;
 import com.ashish.projects.airBnb.service.InventoryService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
@@ -18,6 +19,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/public")
 @RequiredArgsConstructor
+@Slf4j
 public class PublicHotelController {
 
     private final HotelRepository hotelRepository;
@@ -39,13 +41,18 @@ public class PublicHotelController {
         return hotelService.getHotelByInfo(hotelId);
     }
 
-
     @PostMapping("/hotels/search")
-    public ResponseEntity<Page<HotelPriceDto>> searchHotels(
+    public ResponseEntity<Page<HotelPriceDto>> search(
             @RequestBody HotelSearchRequest request
     ) {
-        return ResponseEntity.ok(inventoryService.searchHotels(request));
+        return ResponseEntity.ok(
+                inventoryService.searchHotels(request)
+        );
     }
+
+
+
+
 
 
 }

@@ -2,6 +2,7 @@ package com.ashish.projects.airBnb.service;
 
 import com.ashish.projects.airBnb.dto.*;
 
+import com.ashish.projects.airBnb.entity.Hotel;
 import com.ashish.projects.airBnb.entity.Inventory;
 import com.ashish.projects.airBnb.entity.Room;
 import com.ashish.projects.airBnb.entity.User;
@@ -43,7 +44,7 @@ public class InventoryServiceImpl implements InventoryService {
     public void initializeRoomForAYear(Room room) {
 
 
-        // 🔒 Agar inventory pehle se hai to skip
+
         if (inventoryRepository.existsByRoom(room)) {
             log.info("Inventory already exists for roomId={}, skipping", room.getId());
             return;
@@ -54,7 +55,7 @@ public class InventoryServiceImpl implements InventoryService {
 
         for (; !today.isAfter(endDate); today = today.plusDays(1)) {
 
-            // 🔒 Date-wise safety
+
             if (inventoryRepository.existsByRoomAndDate(room, today)) {
                 continue;
             }
@@ -83,21 +84,36 @@ public class InventoryServiceImpl implements InventoryService {
 
     }
 
-    @Override
-    public Page<HotelPriceDto> searchHotels(HotelSearchRequest hotelSearchRequest) {
-        log.info("searching hotels for city startdate to enddate");
-        Pageable pageable = PageRequest.of(hotelSearchRequest.getPage(), hotelSearchRequest.getSize());
-        Long dateCount =
-                ChronoUnit.DAYS.between(hotelSearchRequest.getStartDate(), hotelSearchRequest.getEndDate()) +1;
-// business logic 90days
 
-       Page<HotelPriceDto> hotelPage= hotelMinPriceRepository.findHotelswithAvailableRoom(hotelSearchRequest.getCity(),
-                hotelSearchRequest.getStartDate(),
-                hotelSearchRequest.getEndDate(),
-                hotelSearchRequest.getRoomsCount(),
-        dateCount,pageable);
-       return hotelPage;
+    @Override
+    public Page<HotelPriceDto> searchHotels(HotelSearchRequest request) {
+
+        Pageable pageable =
+                PageRequest.of(request.getPage(), request.getSize());
+
+        long dateCount =
+                ChronoUnit.DAYS.between(
+                        request.getStartDate(),
+                        request.getEndDate()
+                ) + 1;
+
+        return inventoryRepository.searchHotels(
+                request.getCity(),
+                request.getStartDate(),
+                request.getEndDate(),
+                request.getRoomsCount(),
+                dateCount,
+                pageable
+        );
     }
+
+
+
+
+
+
+
+
 
     @Override
     public List<InventoryDto> getAllInventoryByRoom(Long roomId) throws AccessDeniedException {
