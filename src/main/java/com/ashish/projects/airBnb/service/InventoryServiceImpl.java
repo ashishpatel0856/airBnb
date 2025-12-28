@@ -23,7 +23,10 @@ import java.math.BigDecimal;
 import java.nio.file.AccessDeniedException;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import static com.ashish.projects.airBnb.util.AppUtils.getCurrentUser;
@@ -85,33 +88,6 @@ public class InventoryServiceImpl implements InventoryService {
     }
 
 
-    @Override
-    public Page<HotelPriceDto> searchHotels(HotelSearchRequest request) {
-
-        Pageable pageable =
-                PageRequest.of(request.getPage(), request.getSize());
-
-        long dateCount =
-                ChronoUnit.DAYS.between(
-                        request.getStartDate(),
-                        request.getEndDate()
-                ) + 1;
-
-        return inventoryRepository.searchHotels(
-                request.getCity(),
-                request.getStartDate(),
-                request.getEndDate(),
-                request.getRoomsCount(),
-                dateCount,
-                pageable
-        );
-    }
-
-
-
-
-
-
 
 
 
@@ -146,4 +122,83 @@ inventoryRepository.getInventoryAndLockBeforeUpdate(roomId,updateInventoryReques
                 updateInventoryRequestDto.getSurgeFactor()
         );
     }
+
+
+
+
+    @Override
+    public List<HotelPriceResponseDto> searchHotels(HotelSearchRequest request) {
+
+        long dateCount =
+                ChronoUnit.DAYS.between(
+                        request.getStartDate(),
+                        request.getEndDate()
+                ) + 1;
+
+        List<Object[]> rows =
+                inventoryRepository.findAvailableRooms(
+                        request.getCity(),
+                        request.getStartDate(),
+                        request.getEndDate(),
+                        dateCount,
+                        request.getRoomsCount()
+                );
+
+        Map<Long, HotelPriceResponseDto> hotelMap = new LinkedHashMap<>();
+
+        for (Object[] row : rows) {
+
+            Long roomId = (Long) row[0];
+            Double price = ((Number) row[1]).doubleValue();
+            Integer availableRooms = ((Number) row[2]).intValue();
+
+            Room room = roomRepository.findById(roomId)
+                    .orElseThrow();
+
+            Hotel hotel = room.getHotel();
+
+            hotelMap.putIfAbsent(
+                    hotel.getId(),
+                    buildHotelDto(hotel)
+            );
+
+            hotelMap.get(hotel.getId())
+                    .getRooms()
+                    .add(buildRoomDto(room, price, availableRooms));
+        }
+
+        return new ArrayList<>(hotelMap.values());
+    }
+
+
+
+    private HotelPriceResponseDto buildHotelDto(Hotel hotel) {
+        return new HotelPriceResponseDto(
+                hotel.getId(),
+                hotel.getName(),
+                hotel.getCity(),
+                hotel.getPhotos(),
+                hotel.getAmenities(),
+                hotel.getContactInfo(),
+                null,
+                new ArrayList<>()
+        );
+    }
+
+    private RoomPriceResponseDto buildRoomDto(
+            Room room,
+            Double price,
+            Integer availableRooms
+    ) {
+        return new RoomPriceResponseDto(
+                room.getId(),
+                room.getType(),
+                room.getPhotos(),
+                room.getAmenities(),
+                price,
+                availableRooms,
+                room.getCapacity()
+        );
+    }
+
 }

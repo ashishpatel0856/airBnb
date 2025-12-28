@@ -49,6 +49,30 @@ HAVING COUNT(DISTINCT i.date) = :dateCount
     );
 
 
+    @Query("""
+SELECT 
+   i.room.id,
+   MIN(i.price * i.surgeFactor),
+   MIN(i.totalCount - i.bookedCount)
+FROM Inventory i
+WHERE i.hotel.city = :city
+  AND i.date BETWEEN :startDate AND :endDate
+  AND i.closed = false
+  AND i.hotel.active = true
+GROUP BY i.room.id
+HAVING COUNT(DISTINCT i.date) = :dateCount
+   AND MIN(i.totalCount - i.bookedCount) >= :roomsCount
+""")
+    List<Object[]> findAvailableRooms(
+            String city,
+            LocalDate startDate,
+            LocalDate endDate,
+            Long dateCount,
+            Integer roomsCount
+    );
+
+
+
 
     @Query("""
            SELECT i

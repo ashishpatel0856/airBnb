@@ -12,7 +12,7 @@ public interface InventoryService {
     void initializeRoomForAYear(Room room);
     void deleteFutureInventories(Room room);
 
-    Page<HotelPriceDto> searchHotels(HotelSearchRequest hotelSearchRequest);
+    List<HotelPriceResponseDto> searchHotels(HotelSearchRequest request);
 
     List<InventoryDto> getAllInventoryByRoom(Long roomId) throws AccessDeniedException;
 

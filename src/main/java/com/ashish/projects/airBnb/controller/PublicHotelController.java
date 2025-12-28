@@ -1,9 +1,6 @@
 package com.ashish.projects.airBnb.controller;
 
-import com.ashish.projects.airBnb.dto.HotelDto;
-import com.ashish.projects.airBnb.dto.HotelInfoDto;
-import com.ashish.projects.airBnb.dto.HotelPriceDto;
-import com.ashish.projects.airBnb.dto.HotelSearchRequest;
+import com.ashish.projects.airBnb.dto.*;
 import com.ashish.projects.airBnb.repository.HotelRepository;
 import com.ashish.projects.airBnb.service.HotelService;
 import com.ashish.projects.airBnb.service.InventoryService;
@@ -42,7 +39,7 @@ public class PublicHotelController {
     }
 
     @PostMapping("/hotels/search")
-    public ResponseEntity<Page<HotelPriceDto>> search(
+    public ResponseEntity<List<HotelPriceResponseDto>> search(
             @RequestBody HotelSearchRequest request
     ) {
         return ResponseEntity.ok(
