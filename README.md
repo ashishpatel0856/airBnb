@@ -5,10 +5,9 @@ This backend provides core Airbnb functionalities including authentication, prop
 
 🚀 Features
 🔐 Authentication & Authorization
-
-   # User Signup & Login
-   #JWT-based authentication
-   #Secure password encryption using BCrypt
+   - User Signup & Login
+   -JWT-based authentication
+   -Secure password encryption using BCrypt
 
 👥 Role-Based Access Control (RBAC)
 
@@ -27,6 +26,7 @@ This backend provides core Airbnb functionalities including authentication, prop
 🔍 Search & Browse
 
 Search properties by:
+
     #Location
     #Price range
     #Availability dates
@@ -34,6 +34,7 @@ Search properties by:
     #Pagination and sorting support
 
 📅 Booking System
+
 Book properties for selected dates
     Availability checks to prevent double booking
     Booking lifecycle:
@@ -42,11 +43,13 @@ Book properties for selected dates
     CANCELLED
 
 💳 Payment Gateway Integration(Stripe)
+
     Secure payment processing
     Booking confirmation after successful payment
     Payment status tracking
 
-🧱 Technology Stack(Backend
+🧱 Technology Stack(Backend)
+
     Java 17
     Spring Boot
     Spring Security
