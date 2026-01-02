@@ -5,17 +5,20 @@ This backend provides core Airbnb functionalities including authentication, prop
 
 🚀 Features
 🔐 Authentication & Authorization
+
    # User Signup & Login
    #JWT-based authentication
    #Secure password encryption using BCrypt
 
 👥 Role-Based Access Control (RBAC)
+
     #ADMIN
     #HOST
     #GUEST
     #Role-specific API authorization using Spring Security
 
 🏘️ Property Management
+
    #Create, update, and delete property listings
     #Upload multiple property images
     #Manage property availability
