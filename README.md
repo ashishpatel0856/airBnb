@@ -7,50 +7,29 @@ This backend provides core Airbnb functionalities including authentication, prop
    - **User Signup & Login**
    - **JWT-based Authentication**
    - **Secure Password Encryption using BCrypt**
-
 👥 Role-Based Access Control (RBAC)
   - **ADMIN**
   - **HOST**
   - **GUEST**
-
-Role-specific API authorization using Spring Security
-
+  - **Role-specific API authorization using Spring Security**
 🏘️ Property Management
-
-Create, update, and delete property listings
-
-Upload multiple property images
-
-Manage property availability
-
-Hosts can manage multiple properties
-
+- **Create, update, and delete property listings**
+- **Upload multiple property image**
+- **Manage property availability**
+- **Hosts can manage multiple properties**
 🔍 Search & Browse
 
-Search properties by location
-
-Search properties by price range
-
-Search properties by availability dates
-
-Search properties by number of guests
-
-Pagination and sorting support
-
+- **Search properties by location**
+- **Search properties by price range**
+- **Search properties by availability dates**
+- **Pagination and sorting support**
 📅 Booking System
-
-Book properties for selected dates
-
-Availability checks to prevent double booking
-
+- **Book properties for selected dates**
+- **Availability checks to prevent double booking**
 Booking lifecycle:
-
-PENDING
-
-CONFIRMED
-
-CANCELLED
-
+- **PENDING**
+- **CONFIRMED**
+- **CANCELLED**
 💳 Payment Gateway Integration (Stripe)
 
 Secure payment processing
