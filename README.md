@@ -2,19 +2,19 @@
 
 A production-ready Airbnb Backend Clone built using Spring Boot, designed with Clean Architecture, RESTful API principles, and industry-standard security practices.
 This backend provides core Airbnb functionalities including authentication, property management, bookings, reviews, role-based access control, and payment integration.
-
-🚀 Features
 🔐 Authentication & Authorization
-   - User Signup & Login
-   -JWT-based authentication
-   -Secure password encryption using BCrypt
+
+User Signup & Login
+
+JWT-based authentication
+
+Secure password encryption using BCrypt
 
 👥 Role-Based Access Control (RBAC)
-
-    #ADMIN
-    #HOST
-    #GUEST
-    #Role-specific API authorization using Spring Security
+ADMIN
+HOST
+GUEST
+Role-specific API authorization using Spring Security
 
 🏘️ Property Management
 
