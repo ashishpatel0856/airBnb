@@ -1,7 +1,6 @@
 🏠 Airbnb Clone Backend – Spring Boot
-
-A production-ready Airbnb Backend Clone built using Spring Boot, designed with Clean Architecture, RESTful API principles, and industry-standard security practices.
-This backend provides core Airbnb functionalities including authentication, property management, bookings, reviews, role-based access control, and payment integration.
+- **A production-ready Airbnb Backend Clone built using Spring Boot, designed with Clean Architecture, RESTful API principles, and industry-standard security practices.
+This backend provides core Airbnb functionalities including authentication, property management, bookings, reviews, role-based access control, and payment integration.**
 
 🔐 Authentication & Authorization
    - **User Signup & Login**
@@ -57,13 +56,7 @@ Tools & Libraries
 - **Maven,Lombok,web,ModelMapper,Swagger / OpenAPI,Docker**
 
 ⚙️ Prerequisites
-
-Java 17 or higher
-
-Maven 3.8 or higher
-
-PostgreSQL or MySQL
-
-Docker (optional)
-
-Basic knowledge of Spring Boot and REST APIs
+- **Java 17**
+- **Maven 3.8** 
+- **PostgreSQL**
+- **Basic knowledge of Spring Boot and REST APIs**
