@@ -10,11 +10,13 @@ JWT-based authentication
 
 Secure password encryption using BCrypt
 
-👥 Role-Based Access Control (RBAC)
-ADMIN
-HOST
-GUEST
+## 👥 Role-Based Access Control (RBAC)
+**ADMIN**  
+**HOST**  
+**GUEST**  
+
 Role-specific API authorization using Spring Security
+
 
 🏘️ Property Management
 
