@@ -60,3 +60,16 @@ Tools & Libraries
 - **Maven 3.8** 
 - **PostgreSQL**
 - **Basic knowledge of Spring Boot and REST APIs**
+
+✅ Project Highlights
+-**Clean Architecture**
+- **RESTful API Design**
+- **Secure and Scalable Backend**
+- **Production-Ready Codebase**
+
+  👨‍💻 for connections
+  - **Ashish Kumar**
+ - **Backend Developer | Java | Spring Boot**
+📧 Email: ashishkumarr0856@gmail.com
+🔗 LinkedIn: https://www.linkedin.com/in/ashish-patel-28a572304
+
