@@ -54,15 +54,30 @@ Book properties for selected dates
     Spring Boot
     Spring Security
     Spring Data JPA (Hibernate)
-    Database
+    
+   * Database
+    
     PostgreSQL / MySQL
     H2 Database (for testing)
-    Security
+    
+   * Security
+    
     JWT (JSON Web Token)
     BCrypt Password Encoder
-    Tools & Libraries
+    
+   * Tools & Libraries
+    
     Maven
     Lombok
     ModelMapper
     Swagger / OpenAPI
     Docker (optional)
+
+    ⚙️ Prerequisites
+
+Before running this project, ensure you have the following installed:
+Java 17+
+Maven 3.8+
+PostgreSQL or MySQL
+Docker (optional)
+Basic knowledge of Spring Boot and REST APIs
