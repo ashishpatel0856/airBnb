@@ -68,6 +68,8 @@ Tools & Libraries
 - **Production-Ready Codebase**
 
  Deploy on render :  - **https://airbnb-backend-872m.onrender.com**
+📘 Swagger UI: - **https://airbnb-backend-872m.onrender.com/api/v1/swagger-ui.html**
+
 👨‍💻 for connections
  - **Ashish Kumar**
   - **Backend Developer | Java | Spring Boot**
