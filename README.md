@@ -69,7 +69,7 @@ Tools & Libraries
 
   👨‍💻 for connections
   - **Ashish Kumar**
- - **Backend Developer | Java | Spring Boot**
-📧 Email: ashishkumarr0856@gmail.com
-🔗 LinkedIn: https://www.linkedin.com/in/ashish-patel-28a572304
+  - **Backend Developer | Java | Spring Boot**
+  - **📧 Email: ashishkumarr0856@gmail.com**
+  - **🔗 LinkedIn: https://www.linkedin.com/in/ashish-patel-28a572304**
 
