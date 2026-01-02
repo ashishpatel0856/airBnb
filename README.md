@@ -6,9 +6,7 @@ This backend provides core Airbnb functionalities including authentication, prop
 🔐 Authentication & Authorization
 
 User Signup & Login
-
 JWT-based Authentication
-
 Secure Password Encryption using BCrypt
 
 👥 Role-Based Access Control (RBAC)
