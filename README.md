@@ -7,74 +7,54 @@ This backend provides core Airbnb functionalities including authentication, prop
    - **User Signup & Login**
    - **JWT-based Authentication**
    - **Secure Password Encryption using BCrypt**
-   - 
+    
 👥 Role-Based Access Control (RBAC)
   - **ADMIN**
   - **HOST**
   - **GUEST**
   - **Role-specific API authorization using Spring Security**
-  - 
+   
 🏘️ Property Management
 - **Create, update, and delete property listings**
 - **Upload multiple property image**
 - **Manage property availability**
 - **Hosts can manage multiple properties**
-- 
+ 
 🔍 Search & Browse
 
 - **Search properties by location**
 - **Search properties by price range**
 - **Search properties by availability dates**
 - **Pagination and sorting support**
-- 
+ 
 📅 Booking System
 - **Book properties for selected dates**
 - **Availability checks to prevent double booking**
+ 
 Booking lifecycle:
 - **PENDING**
 - **CONFIRMED**
 - **CANCELLED**
+ 
 💳 Payment Gateway Integration (Stripe)
-
-Secure payment processing
-
-Booking confirmation after successful payment
-
-Payment status tracking
+- **Secure payment processing**
+- **Booking confirmation after successful payment**
+- **Payment status tracking**
 
 🧱 Technology Stack (Backend)
 
-Java 17
-
-Spring Boot
-
-Spring Security
-
-Spring Data JPA (Hibernate)
-
-Database
-
-PostgreSQL / MySQL
-
-H2 Database (for testing)
-
-Security
-
-JWT (JSON Web Token)
-
-BCrypt Password Encoder
+- **Java 17**
+- **Spring Boot**
+- **Spring Security**
+- **Spring Data JPA (Hibernate)**
+- **PostgreSQL**
+- **H2 Database (for testing)**
+- **Spring Security**
+- **JWT (JSON Web Token)**
+- **BCrypt Password Encoder**
 
 Tools & Libraries
-
-Maven
-
-Lombok
-
-ModelMapper
-
-Swagger / OpenAPI
-
-Docker (optional)
+- **Maven,Lombok,web,ModelMapper,Swagger / OpenAPI,Docker**
 
 ⚙️ Prerequisites
 
