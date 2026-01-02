@@ -1,5 +1,3 @@
-.
-
 🏠 Airbnb Clone Backend – Spring Boot
 
 A production-ready Airbnb Backend Clone built using Spring Boot, designed with Clean Architecture, RESTful API principles, and industry-standard security practices.
@@ -7,109 +5,58 @@ This backend provides core Airbnb functionalities including authentication, prop
 
 🚀 Features
 🔐 Authentication & Authorization
-
-User Signup & Login
-
-JWT-based authentication
-
-OAuth2 login (Google / GitHub)
-
-Secure password encryption using BCrypt
+   # User Signup & Login
+   #JWT-based authentication
+   #Secure password encryption using BCrypt
 
 👥 Role-Based Access Control (RBAC)
-
-ADMIN
-
-HOST
-
-GUEST
-
-Role-specific API authorization using Spring Security
+    #ADMIN
+    #HOST
+    #GUEST
+    #Role-specific API authorization using Spring Security
 
 🏘️ Property Management
-
-Create, update, and delete property listings
-
-Upload multiple property images
-
-Manage property availability
-
-Hosts can manage multiple properties
+   #Create, update, and delete property listings
+    #Upload multiple property images
+    #Manage property availability
+    #Hosts can manage multiple properties
 
 🔍 Search & Browse
 
 Search properties by:
-
-Location
-
-Price range
-
-Availability dates
-
-Number of guests
-
-Pagination and sorting support
+    #Location
+    #Price range
+    #Availability dates
+    #Number of guests
+    #Pagination and sorting support
 
 📅 Booking System
-
 Book properties for selected dates
+    Availability checks to prevent double booking
+    Booking lifecycle:
+    PENDING
+    CONFIRMED
+    CANCELLED
 
-Availability checks to prevent double booking
+💳 Payment Gateway Integration(Stripe)
+    Secure payment processing
+    Booking confirmation after successful payment
+    Payment status tracking
 
-Booking lifecycle:
-
-PENDING
-
-CONFIRMED
-
-CANCELLED
-
-⭐ Reviews & Ratings
-
-Guests can leave reviews after completed bookings
-
-Property ratings (1–5 stars)
-
-Automatic average rating calculation
-
-💳 Payment Gateway Integration
-
-Secure payment processing
-
-Booking confirmation after successful payment
-
-Payment status tracking
-
-🧱 Technology Stack
-Backend
-
-Java 17
-
-Spring Boot
-
-Spring Security
-
-Spring Data JPA (Hibernate)
-
-Database
-
-PostgreSQL / MySQL
-
-H2 Database (for testing)
-
-Security
-
-JWT (JSON Web Token)
-
-OAuth2
-
-BCrypt Password Encoder
-
-Tools & Libraries
-
-Maven
-Lombok
-ModelMapper
-Swagger / OpenAPI
-
-Docker (optional)
+🧱 Technology Stack(Backend
+    Java 17
+    Spring Boot
+    Spring Security
+    Spring Data JPA (Hibernate)
+    Database
+    PostgreSQL / MySQL
+    H2 Database (for testing)
+    Security
+    JWT (JSON Web Token)
+    BCrypt Password Encoder
+    Tools & Libraries
+    Maven
+    Lombok
+    ModelMapper
+    Swagger / OpenAPI
+    Docker (optional)
