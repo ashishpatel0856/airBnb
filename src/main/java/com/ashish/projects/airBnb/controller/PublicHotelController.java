@@ -38,13 +38,10 @@ public class PublicHotelController {
         return hotelService.getHotelByInfo(hotelId);
     }
 
+
     @PostMapping("/hotels/search")
-    public ResponseEntity<List<HotelPriceResponseDto>> search(
-            @RequestBody HotelSearchRequest request
-    ) {
-        return ResponseEntity.ok(
-                inventoryService.searchHotels(request)
-        );
+    public ResponseEntity<List<HotelPriceResponseDto>> search(@RequestBody HotelSearchRequest request) {
+        return ResponseEntity.ok(inventoryService.searchHotels(request));
     }
 
 

@@ -114,44 +114,55 @@ public class BookingServiceImpl implements BookingService {
     public BookingDto addGuests(Long bookingId, List<GuestDto> guestDtoList) {
         log.info("adding guests for booking with id");
 
-        Booking booking = bookingRepository.findById(bookingId).orElseThrow(()-> new ResourceNotFoundException("Booking not found with id"));
-
-
+        Booking booking = bookingRepository.findById(bookingId).orElseThrow(() -> new ResourceNotFoundException("Booking not found with id"));
 
 
         User user = getCurrentUser();
-        if(hasBookingExpired(booking)){
+        if (hasBookingExpired(booking)) {
             throw new ResourceNotFoundException("Booking has already expired");
         }
         if (!user.equals(booking.getUser())) {
-            throw new UnAuthorisedExceptionn("booking does not belong to this user with id " );
+            throw new UnAuthorisedExceptionn("booking does not belong to this user with id ");
         }
 
 
-
-
-        if(hasBookingExpired(booking)){
+        if (hasBookingExpired(booking)) {
             throw new IllegalStateException("Booking is expired");
         }
 
-        if(booking.getBookingStatus() != BookingStatus.RESERVED){
+        if (booking.getBookingStatus() != BookingStatus.RESERVED) {
             throw new IllegalStateException("Booking is not reserved");
         }
 
-        for(GuestDto guestDto : guestDtoList){
+        for (GuestDto guestDto : guestDtoList) {
             Guest guest = modelMapper.map(guestDto, Guest.class);
             guest.setUser(user);
-            guest =guestRepository.save(guest);
+            guest.setBooking(booking);
             booking.getGuests().add(guest);
         }
+
         booking.setBookingStatus(BookingStatus.GUESTS_ADDED);
+        booking = bookingRepository.save(booking);
 
-     booking = bookingRepository.save(booking);
-        return modelMapper.map(booking, BookingDto.class);
+// ---- DTO mapping ----
+        BookingDto bookingDto = modelMapper.map(booking, BookingDto.class);
+        bookingDto.setGuests(
+                booking.getGuests().stream().map(g -> {
+                    GuestDto dto = new GuestDto();
+                    dto.setId(g.getId());
+                    dto.setName(g.getName());
+                    dto.setGender(g.getGender());
+                    dto.setAge(g.getAge());
+                    dto.setUserId(g.getUser().getId());
+                    dto.setUserName(g.getUser().getName());
+                    return dto;
+                }).collect(Collectors.toSet())
+        );
 
+        return bookingDto;
     }
 
-    // for payments
+        // for payments
     @Override
     @Transactional
     public String initiatePayment(Long bookingId) {

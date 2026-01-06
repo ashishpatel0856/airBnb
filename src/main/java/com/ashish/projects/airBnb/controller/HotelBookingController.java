@@ -5,8 +5,6 @@ import com.ashish.projects.airBnb.dto.BookingRequest;
 import com.ashish.projects.airBnb.dto.GuestDto;
 import com.ashish.projects.airBnb.repository.BookingRepository;
 import com.ashish.projects.airBnb.service.BookingService;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 

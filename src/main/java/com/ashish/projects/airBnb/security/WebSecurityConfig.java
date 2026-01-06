@@ -44,7 +44,7 @@ public class WebSecurityConfig {
                         .requestMatchers("/public/**").permitAll()
                         .requestMatchers("/auth/**").permitAll()
                         .requestMatchers("/admin/**").authenticated()
-                        .requestMatchers("/booking/**").authenticated()
+                        .requestMatchers("/bookings/**").authenticated()
                         .requestMatchers("/users/**").authenticated()
                         .requestMatchers(
                                 "/v3/api-docs/**",
