@@ -56,58 +56,63 @@ public class BookingServiceImpl implements BookingService {
     @Override
     @Transactional
     public BookingDto initialiseBooking(BookingRequest bookingRequest) {
-        log.info("initialiseBooking for hotel room start to end date");
+
         Hotel hotel = hotelRepository.findById(bookingRequest.getHotelId())
-                .orElseThrow(()-> new ResourceNotFoundException("Hotel not found with id"));
+                .orElseThrow(() -> new ResourceNotFoundException("Hotel not found"));
 
         Room room = roomRepository.findById(bookingRequest.getRoomId())
-                .orElseThrow(()-> new ResourceNotFoundException("Room not found with id"));
+                .orElseThrow(() -> new ResourceNotFoundException("Room not found"));
 
-        List<Inventory> inventoryList = inventoryRepository.findAndLockAvailableInventory(room.getId(),
-                bookingRequest.getCheckInDate(), bookingRequest.getCheckOutDate(),bookingRequest.getRoomsCount());
+        List<Inventory> inventoryList =
+                inventoryRepository.findAndLockAvailableInventory(
+                        room.getId(),
+                        bookingRequest.getCheckInDate(),
+                        bookingRequest.getCheckOutDate(),
+                        bookingRequest.getRoomsCount()
+                );
 
-        long daysCount = ChronoUnit.DAYS.between(bookingRequest.getCheckInDate(), bookingRequest.getCheckOutDate())+1;
+        long days =
+                ChronoUnit.DAYS.between(
+                        bookingRequest.getCheckInDate(),
+                        bookingRequest.getCheckOutDate()
+                ) + 1;
 
-        if(inventoryList.size() != daysCount){
-            throw new ResourceNotFoundException("room is not available anymore");
+        if (inventoryList.size() != days) {
+            throw new ResourceNotFoundException("Room not available");
         }
 
-// reserve the room ya update the booked count of inventories
-//        for(Inventory inventory : inventoryList){
-//            inventory.setBookedCount(inventory.getBookedCount()+ bookingRequest.getRoomsCount());
-//        }
-//
-//        inventoryRepository.saveAll(inventoryList);
-
-        inventoryRepository.initBooking(room.getId(),
+        // reserve inventory
+        inventoryRepository.initBooking(
+                room.getId(),
                 bookingRequest.getCheckInDate(),
                 bookingRequest.getCheckOutDate(),
-                bookingRequest.getRoomsCount());
+                bookingRequest.getRoomsCount()
+        );
 
-        //Create the booking hotel
-//        User user = new User();
-//        user.setId(1L);
+        // 🔥 REAL PRICE CALCULATION
+        BigDecimal priceForOneRoom =
+                priceService.calculateTotalPrice(inventoryList);
 
-        // calculate dynamic amount
-        BigDecimal priceForOneRoom = priceService.calculateTotalPrice(inventoryList);
-        BigDecimal totalPrice = priceForOneRoom.multiply(BigDecimal.valueOf(bookingRequest.getRoomsCount()));
+        BigDecimal totalAmount =
+                priceForOneRoom.multiply(
+                        BigDecimal.valueOf(bookingRequest.getRoomsCount())
+                );
 
-
-        Booking booking  = Booking.builder()
-                .bookingStatus(BookingStatus.RESERVED)
+        Booking booking = Booking.builder()
                 .hotel(hotel)
                 .room(room)
+                .user(getCurrentUser())
                 .checkInDate(bookingRequest.getCheckInDate())
                 .checkOutDate(bookingRequest.getCheckOutDate())
-                .user(getCurrentUser())
                 .roomsCount(bookingRequest.getRoomsCount())
-                .amount(BigDecimal.TEN)
+                .amount(totalAmount)
+                .bookingStatus(BookingStatus.RESERVED)
                 .build();
 
-    booking = bookingRepository.save(booking);
-    return modelMapper.map(booking, BookingDto.class);
-
+        booking = bookingRepository.save(booking);
+        return modelMapper.map(booking, BookingDto.class);
     }
+
 
     @Override
     @Transactional
