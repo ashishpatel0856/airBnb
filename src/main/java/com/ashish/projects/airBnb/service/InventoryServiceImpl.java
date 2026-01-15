@@ -61,20 +61,20 @@ public class InventoryServiceImpl implements InventoryService {
                 continue;
             }
 
-         Inventory inventory =Inventory.builder()
-                 .hotel(room.getHotel())
-                 .room(room)
-                 .bookedCount(0)
-                 .reservedCount(0)
-                 .city(room.getHotel().getCity())
-                 .date(today)
-                 .price(room.getBasePrice())
-                 .surgeFactor(BigDecimal.ONE)
-                 .totalCount(room.getTotalCount())
-                 .closed(false)
-                 .build();
-         inventoryRepository.save(inventory);
-     }
+            Inventory inventory =Inventory.builder()
+                    .hotel(room.getHotel())
+                    .room(room)
+                    .bookedCount(0)
+                    .reservedCount(0)
+                    .city(room.getHotel().getCity())
+                    .date(today)
+                    .price(room.getBasePrice())
+                    .surgeFactor(BigDecimal.ONE)
+                    .totalCount(room.getTotalCount())
+                    .closed(false)
+                    .build();
+            inventoryRepository.save(inventory);
+        }
     }
 
     @Override
@@ -112,7 +112,7 @@ public class InventoryServiceImpl implements InventoryService {
         User user = getCurrentUser();
         if(!user.equals(room.getHotel().getOwner()))
             throw new AccessDeniedException("you are not user for this rooom");
-inventoryRepository.getInventoryAndLockBeforeUpdate(roomId,updateInventoryRequestDto.getStartDate(),updateInventoryRequestDto.getEndDate());
+        inventoryRepository.getInventoryAndLockBeforeUpdate(roomId,updateInventoryRequestDto.getStartDate(),updateInventoryRequestDto.getEndDate());
         inventoryRepository.updateInventory(roomId,
                 updateInventoryRequestDto.getStartDate(),
                 updateInventoryRequestDto.getEndDate(),

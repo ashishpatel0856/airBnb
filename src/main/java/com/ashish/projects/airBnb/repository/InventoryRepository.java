@@ -145,7 +145,6 @@ AND i.closed = false
     );
 
 
-    List<Inventory> findByHotelAndDateBetween(Hotel hotel, LocalDate startDate, LocalDate endDate);
 
     List<Inventory> findByRoomOrderByDate(Room room);
 
@@ -183,5 +182,25 @@ AND i.date BETWEEN :startDate AND :endDate
 
     );
 
+
+    void deleteByRoom(Room room);
+
+
+    @Query("""
+                SELECT i
+                FROM Inventory i
+                WHERE i.room.id = :roomId
+                  AND i.date BETWEEN :startDate AND :endDate
+                  AND (i.totalCount - i.bookedCount) >= :numberOfRooms
+                  AND i.closed = false
+            """)
+    @Lock(LockModeType.PESSIMISTIC_WRITE)
+    List<Inventory> findAndLockReservedInventory(@Param("roomId") Long roomId,
+                                                 @Param("startDate") LocalDate startDate,
+                                                 @Param("endDate") LocalDate endDate,
+                                                 @Param("numberOfRooms") int numberOfRooms);
+
+
+    List<Inventory> findByHotelAndDateBetween(Hotel hotel, LocalDate startDate, LocalDate endDate);
 
 }

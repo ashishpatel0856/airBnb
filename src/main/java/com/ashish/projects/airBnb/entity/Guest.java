@@ -43,6 +43,6 @@ public class Guest {
     private LocalDateTime updatedAt;
 
     @NotBlank
-    private Integer age;
+    private  LocalDate dateOfBirth;
 
 }

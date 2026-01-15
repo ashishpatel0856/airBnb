@@ -3,6 +3,7 @@ package com.ashish.projects.airBnb.controller;
 import com.ashish.projects.airBnb.dto.BookingDto;
 import com.ashish.projects.airBnb.dto.BookingRequest;
 import com.ashish.projects.airBnb.dto.GuestDto;
+import com.ashish.projects.airBnb.entity.enums.BookingStatus;
 import com.ashish.projects.airBnb.repository.BookingRepository;
 import com.ashish.projects.airBnb.service.BookingService;
 import org.springframework.http.ResponseEntity;
@@ -47,7 +48,7 @@ public class HotelBookingController {
     }
 
     @GetMapping("/{bookingId}/status")
-    public ResponseEntity<Map<String,String>> getBookingStatus(@PathVariable Long bookingId) {
+    public ResponseEntity<Map<String, BookingStatus>> getBookingStatus(@PathVariable Long bookingId) {
 
         return ResponseEntity.ok(Map.of("status",bookingService.getBookingStatus(bookingId)));
 

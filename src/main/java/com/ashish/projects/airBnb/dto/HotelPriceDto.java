@@ -30,4 +30,5 @@ public class HotelPriceDto {
         this.price = BigDecimal.valueOf(avgPrice);
     }
 
+
 }
