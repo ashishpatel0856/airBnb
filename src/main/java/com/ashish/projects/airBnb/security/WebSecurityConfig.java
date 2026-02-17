@@ -48,6 +48,7 @@ public class WebSecurityConfig {
                         .requestMatchers("/bookings/**").authenticated()
                         .requestMatchers("/users/**").authenticated()
                         .requestMatchers(
+                                "/status",
                                 "/v3/api-docs/**",
                                 "/swagger-ui/**",
                                 "/swagger-ui.html",
