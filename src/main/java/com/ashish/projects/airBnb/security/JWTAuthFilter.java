@@ -40,6 +40,7 @@ public class JWTAuthFilter extends OncePerRequestFilter {
                 || path.startsWith("/swagger-ui.html")
                 || path.startsWith("/api/v1/v3/api-docs")
                 || path.startsWith("/api/v1/swagger-ui")
+                || path.startsWith("/webhook")
                 || path.startsWith("/auth");
     }
 

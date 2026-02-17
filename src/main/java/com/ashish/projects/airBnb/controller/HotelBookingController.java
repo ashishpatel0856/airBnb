@@ -2,10 +2,12 @@ package com.ashish.projects.airBnb.controller;
 
 import com.ashish.projects.airBnb.dto.BookingDto;
 import com.ashish.projects.airBnb.dto.BookingRequest;
+import com.ashish.projects.airBnb.dto.BookingStatusResponseDto;
 import com.ashish.projects.airBnb.dto.GuestDto;
 import com.ashish.projects.airBnb.entity.enums.BookingStatus;
 import com.ashish.projects.airBnb.repository.BookingRepository;
 import com.ashish.projects.airBnb.service.BookingService;
+import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -48,10 +50,9 @@ public class HotelBookingController {
     }
 
     @GetMapping("/{bookingId}/status")
-    public ResponseEntity<Map<String, BookingStatus>> getBookingStatus(@PathVariable Long bookingId) {
-
-        return ResponseEntity.ok(Map.of("status",bookingService.getBookingStatus(bookingId)));
-
+    @Operation(summary = "Check the status of the booking", tags = {"Booking Flow"})
+    public ResponseEntity<BookingStatusResponseDto> getBookingStatus(@PathVariable Long bookingId) {
+        return ResponseEntity.ok(new BookingStatusResponseDto(bookingService.getBookingStatus(bookingId)));
     }
 
 }

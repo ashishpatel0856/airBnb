@@ -43,7 +43,7 @@ public class WebSecurityConfig {
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                         .requestMatchers("/public/**").permitAll()
                         .requestMatchers("/auth/**").permitAll()
-                        .requestMatchers("/api/v1/webhook/**").permitAll()
+                        .requestMatchers("/webhook/**").permitAll()
                         .requestMatchers("/admin/**").authenticated()
                         .requestMatchers("/bookings/**").authenticated()
                         .requestMatchers("/users/**").authenticated()
