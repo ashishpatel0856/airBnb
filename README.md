@@ -69,7 +69,7 @@ Tools & Libraries
 
  Deploy on render :  - **https://airbnb-backend-872m.onrender.com/api/v1/status**
  
-📘 Swagger UI: - **https://airbnb-backend-872m.onrender.com/api/v1/swagger-ui.html**
+📘 Swagger UI: - **https://airbnb-backend-872m.onrender.com/api/v1/swagger-ui.html/index.html**
 
 👨‍💻 for connections
  - **Ashish Kumar**
